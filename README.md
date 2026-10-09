@@ -2,6 +2,22 @@
 
 从 [beastydesign/scifi](https://beastydesign.github.io/scifi/) 提炼的科幻 HUD 控制台框架:设计令牌驱动、深浅双场景、零依赖、无构建。
 
+## 截图
+
+| 深色主控台 | 浅色纸墨场景 |
+|---|---|
+| ![console dark](docs/screenshots/console-dark.png) | ![console light](docs/screenshots/console-light.png) |
+
+| ORBITAL 主题 | CINDER 主题 |
+|---|---|
+| ![orbital](docs/screenshots/theme-orbital.png) | ![cinder](docs/screenshots/theme-cinder.png) |
+
+控件库全览(terminal / table / notes / launcher / report + 对照 shadcn·AntD 补齐的 24 项扩展控件):
+
+![components](docs/screenshots/components.png)
+
+在线 demo(GitHub Pages):<https://losecher.github.io/hud-console-framework/>
+
 ## 快速开始
 
 ```bash
