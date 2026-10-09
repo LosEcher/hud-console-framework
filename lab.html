@@ -41,7 +41,7 @@
       <div><b>TOKEN LAB</b><small>SPARK · 单色 / 点缀色 · 参数台</small></div>
     </div>
     <div class="ticker" id="ticker"><span></span><span></span><span></span></div>
-    <div class="clock"><div class="pages" id="scheme-nav"></div><div><small id="date"></small><b id="clock"></b></div></div>
+    <div class="clock"><div class="pages"><a href="index.html">CONSOLE</a><a href="components.html">COMPONENTS</a></div><div class="pages" id="scheme-nav"></div><div><small id="date"></small><b id="clock"></b></div></div>
   </header>
 
   <aside class="col left">
@@ -87,6 +87,22 @@
           <input class="hud-range" type="range" id="au-r" min="0" max="1" step="0.05" value="1"></div>
         <p style="font-size:8px;color:var(--faint);line-height:1.8;letter-spacing:0.06em">
           0 = 完全单色界面(强调色全部退成白);1 = 强调色全额参与。与 RATIO 独立:RATIO 管屏幕火星,ACCENT-USE 管界面控件。</p>
+      </div>
+    </section>
+
+    <section class="panel">
+      <header><span class="tag">AC</span>主色 · 强调色<small>ACCENT HUE</small></header>
+      <div class="body">
+        <div class="ctl"><div class="lbl"><span>ACCENT · 界面主色</span><output id="o-accent">#ff9a3c</output></div>
+          <div class="ctl-row" style="gap:6px">
+            <input type="color" id="p-accent" value="#ff9a3c" style="width:44px;height:24px;padding:0;border:var(--line-w) solid var(--line);background:transparent;cursor:pointer">
+            <button class="hud-btn" data-acc="#ff9a3c" style="font-size:7.5px;padding:4px 8px;margin:0">琥珀</button>
+            <button class="hud-btn" data-acc="#ff4d3d" style="font-size:7.5px;padding:4px 8px;margin:0">红</button>
+            <button class="hud-btn" data-acc="#46d8ff" style="font-size:7.5px;padding:4px 8px;margin:0">青</button>
+            <button class="hud-btn" data-acc="#baff5c" style="font-size:7.5px;padding:4px 8px;margin:0">荧绿</button>
+          </div></div>
+        <p style="font-size:8px;color:var(--faint);line-height:1.8;letter-spacing:0.06em">
+          在 :root 上覆盖 --accent / --accent-rgb:两侧预览与左侧控制台同步换色,按钮、徽章、进度条、页签等全部强调位即时生效;火星点缀色由上方 PALETTE 独立控制,互不影响。深浅两种场景同时生效,可用 ?accent=ff9a3c 复现。</p>
       </div>
     </section>
 
@@ -235,6 +251,28 @@ param("ratio", "p-ratio", "o-ratio", (v) => { R.ratio = v; });
 param("opacity", "p-opac", "o-opac", (v) => { L.opacity = R.opacity = v; });
 param("comet", "p-comet", "o-comet", (v) => { R.cometEvery = v; });
 
+// ---- accent hue: overrides --accent / --accent-rgb at the document root ----
+// Root-level (not per-pane): --ac / --ac-soft / --ac-line in hud-components.css
+// are derived from --accent-rgb at :root, so only a root override recomputes them.
+const hexToRgb = (hex) => {
+  const n = parseInt(hex.slice(1), 16);
+  return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+};
+const applyAccent = (hex) => {
+  const [r, g, b] = hexToRgb(hex);
+  const root = document.documentElement.style;
+  root.setProperty("--accent", hex);
+  root.setProperty("--accent-rgb", `${r}, ${g}, ${b}`);
+  $("o-accent").textContent = hex;
+  $("p-accent").value = hex;
+  resolve();
+};
+$("p-accent").addEventListener("input", (e) => applyAccent(e.target.value));
+document.querySelectorAll("[data-acc]").forEach((b) =>
+  b.addEventListener("click", () => applyAccent(b.dataset.acc)));
+const reqAccent = (q.get("accent") || "").replace(/^#/, "");
+if (/^[0-9a-f]{6}$/i.test(reqAccent)) applyAccent("#" + reqAccent.toLowerCase());
+
 const PRESETS = {
   mono:    { ratio: 0,    palette: [], opacity: 0.5, speed: 0.6, cometEvery: 0,   turbulence: 0.001 },
   dust:    { ratio: 0.1,  palette: ["255,154,60"], opacity: 0.55, speed: 1, cometEvery: 3, turbulence: 0.0016 },
@@ -264,7 +302,7 @@ function resolve() {
     density: R.density, ratio: R.ratio, palette: R.palette, speed: R.speed,
     size: [R.sizeMin, R.sizeMax], turbulence: R.turbulence,
     cometEvery: R.cometEvery, opacity: R.opacity,
-  }, "accent-use: left": $("au-l").value, "accent-use: right": $("au-r").value,
+  }, "accent": $("o-accent").textContent, "accent-use: left": $("au-l").value, "accent-use: right": $("au-r").value,
   "line-w": $("p-linew").value + "px", "scheme": document.documentElement.dataset.scheme }, null, 1);
 }
 resolve();

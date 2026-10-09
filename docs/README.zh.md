@@ -35,7 +35,7 @@ npm run dev        # -> http://localhost:7100 (或 PORT 环境变量)
 | `lab.html` | 令牌实验室(点缀色参数 / 线宽 / 场景切换,全部可 URL 复现) |
 
 URL 参数:`?theme=ember|orbital|cinder` `?scheme=dark|light` `?linew=0.5..3`
-lab 额外支持 `?density=&ratio=&opacity=&comet=`。
+lab 额外支持 `?density=&ratio=&opacity=&comet=&accent=rrggbb`。
 
 ## 目录结构
 

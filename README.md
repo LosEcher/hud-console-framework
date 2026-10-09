@@ -35,7 +35,7 @@ Any static file server works too — there is no build step.
 | `lab.html` | Token lab (spark particle params / line width / scheme switch, all reproducible via URL) |
 
 URL params: `?theme=ember|orbital|cinder` `?scheme=dark|light` `?linew=0.5..3`.
-The lab additionally accepts `?density=&ratio=&opacity=&comet=`.
+The lab additionally accepts `?density=&ratio=&opacity=&comet=&accent=rrggbb`.
 
 ## Directory layout
 
