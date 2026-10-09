@@ -34,7 +34,7 @@
       <rect x="0.5" y="0.5" width="27" height="27"/><path d="M5 21 L11 9 L15 16 L18 12 L23 21 Z"/><path d="M6 23 L22 5" stroke-dasharray="1 2"/>
     </svg>
     <div><b>HUD COMPONENTS</b><small>TERMINAL · TABLE · NOTES · LAUNCHER · REPORT · CONTROLS</small></div>
-    <div class="pages" id="scheme-nav" style="margin-left:auto"></div>
+    <div class="pages" id="lang-nav" style="margin-left:auto"></div><div class="pages" id="scheme-nav"></div>
   </div>
 
   <nav class="nav">
@@ -47,8 +47,8 @@
   <!-- ============ 01 CONTROLS ============ -->
   <section class="demo" id="controls">
     <h2>01 · CONTROLS</h2>
-    <p class="sub">网页常见控件 · 全部由 tokens/base.json 驱动 · 强调色参与由 --accent-use 控制</p>
-    <div class="panel"><header><span class="tag">A</span>CONTROL RACK<small>HOVER / FOCUS / DISABLED 皆有态</small></header>
+    <p class="sub" data-en="Common web controls · all driven by tokens/base.json · accent participation via --accent-use">网页常见控件 · 全部由 tokens/base.json 驱动 · 强调色参与由 --accent-use 控制</p>
+    <div class="panel"><header><span class="tag">A</span>CONTROL RACK<small data-en="HOVER / FOCUS / DISABLED ALL STYLED">HOVER / FOCUS / DISABLED 皆有态</small></header>
       <div class="body demo-body">
         <div class="ctl-row">
           <button class="hud-btn primary">PRIMARY</button>
@@ -56,12 +56,12 @@
           <button class="hud-btn">DEFAULT</button>
           <button class="hud-btn danger">DANGER</button>
           <button class="hud-btn" disabled>DISABLED</button>
-          <span data-tip="提示也走面板语言"><button class="hud-btn">TOOLTIP</button></span>
+          <span data-tip="提示也走面板语言" data-en-tip="Tooltips speak the panel language too"><button class="hud-btn">TOOLTIP</button></span>
         </div>
         <div class="two-col">
-          <div class="hud-field"><label>CALLSIGN · 文本输入</label>
-            <input class="hud-input" placeholder="UQ-7741 · KESTREL"><div class="hint">FOCUS 时边框点亮</div></div>
-          <div class="hud-field"><label>CHANNEL · 下拉选择</label>
+          <div class="hud-field"><label data-en="CALLSIGN · TEXT INPUT">CALLSIGN · 文本输入</label>
+            <input class="hud-input" placeholder="UQ-7741 · KESTREL"><div class="hint" data-en="Border lights up on FOCUS">FOCUS 时边框点亮</div></div>
+          <div class="hud-field"><label data-en="CHANNEL · SELECT">CHANNEL · 下拉选择</label>
             <select class="hud-select"><option>UPLINK · 148.2 MHz</option><option>RELAY · 121.9 MHz</option><option>GUARD · 243.0 MHz</option></select></div>
         </div>
         <div class="ctl-row">
@@ -75,10 +75,10 @@
           <div class="hud-tabs" id="tabs">
             <button class="on">OVERVIEW</button><button>UPLINK</button><button>DIAGNOSTIC</button>
           </div>
-          <div class="hud-tab-panel" id="tab-panel">当前页签内容区。页签下划线即强调色,切换由 8 行原生 JS 完成。</div>
+          <div class="hud-tab-panel" id="tab-panel" data-en="Tab content area. The underline is the accent colour; switching is 8 lines of vanilla JS.">当前页签内容区。页签下划线即强调色,切换由 8 行原生 JS 完成。</div>
         </div>
         <div class="ctl-row">
-          <div class="grow"><div class="hud-field" style="margin:0"><label>GAIN · 滑杆 <span class="hud-kbd">⌥⌘G</span></label>
+          <div class="grow"><div class="hud-field" style="margin:0"><label><span data-en="GAIN · SLIDER">GAIN · 滑杆</span> <span class="hud-kbd">⌥⌘G</span></label>
             <input class="hud-range" type="range" min="0" max="100" value="64" id="gain"></div></div>
           <div class="grow"><div class="hud-meter" style="margin-top:12px"><b id="gain-out">64</b><small>GAIN</small></div>
             <div class="hud-progress"><i id="gain-bar" style="width:64%"></i></div></div>
@@ -97,13 +97,13 @@
         </div>
         <div class="two-col">
           <div>
-            <div class="hud-acc"><details open><summary>发射窗口</summary><div class="acc-body">T-00:42:17 · 窗口长 9 分 12 秒 · 副窗口 T+02:11:05。</div></details></div>
-            <div class="hud-acc"><details><summary>频段计划</summary><div class="acc-body">UPLINK 148.2 / DOWNLINK 121.9 / GUARD 243.0,全部 AM 兼容。</div></details></div>
-            <div class="hud-acc"><details><summary>回撤预案</summary><div class="acc-body">三级:HOLD → RELAY → ABORT,由地面自动判定。</div></details></div>
+            <div class="hud-acc"><details open><summary data-en="LAUNCH WINDOW">发射窗口</summary><div class="acc-body" data-en="T-00:42:17 · window 9 min 12 s · backup T+02:11:05.">T-00:42:17 · 窗口长 9 分 12 秒 · 副窗口 T+02:11:05。</div></details></div>
+            <div class="hud-acc"><details><summary data-en="BAND PLAN">频段计划</summary><div class="acc-body" data-en="UPLINK 148.2 / DOWNLINK 121.9 / GUARD 243.0, all AM-compatible.">UPLINK 148.2 / DOWNLINK 121.9 / GUARD 243.0,全部 AM 兼容。</div></details></div>
+            <div class="hud-acc"><details><summary data-en="ABORT PLAN">回撤预案</summary><div class="acc-body" data-en="Three stages: HOLD → RELAY → ABORT, decided automatically on the ground.">三级:HOLD → RELAY → ABORT,由地面自动判定。</div></details></div>
           </div>
-          <div class="hud-code"><span class="c">// 令牌即 API:任意页面改两行变量即换肤</span><br>
+          <div class="hud-code"><span class="c" data-en="// tokens are the API: change two lines in any page to re-skin">// 令牌即 API:任意页面改两行变量即换肤</span><br>
 document.body.dataset.theme = <span class="k">"cinder"</span>;<br>
-style.setProperty(<span class="k">"--accent-use"</span>, 0); <span class="c">// 单色化</span></div>
+style.setProperty(<span class="k">"--accent-use"</span>, 0); <span class="c" data-en="// monochrome">// 单色化</span></div>
         </div>
       </div>
     </div>
@@ -112,7 +112,7 @@ style.setProperty(<span class="k">"--accent-use"</span>, 0); <span class="c">// 
   <!-- ============ 02 TERMINAL ============ -->
   <section class="demo" id="terminal">
     <h2>02 · TERMINAL</h2>
-    <p class="sub">终端窗口 · 打字机输出 · 块状光标</p>
+    <p class="sub" data-en="Terminal window · typewriter output · block cursor">终端窗口 · 打字机输出 · 块状光标</p>
     <div class="hud-terminal" style="height:240px">
       <div class="term-head"><span class="tag">TTY</span>KESTREL-9 · /dev/uplink0<span style="margin-left:auto">9600 8N1</span></div>
       <div class="term-body" id="term"></div>
@@ -122,8 +122,8 @@ style.setProperty(<span class="k">"--accent-use"</span>, 0); <span class="c">// 
   <!-- ============ 03 TABLE ============ -->
   <section class="demo" id="table">
     <h2>03 · TABLE</h2>
-    <p class="sub">数据表格 · 行悬停 / 选中态 · 数字列对齐 · 徽章列</p>
-    <div class="panel"><header><span class="tag">T</span>MANIFEST · 设备清单<small>14 UNITS</small></header>
+    <p class="sub" data-en="Data table · row hover / selected · numeric columns aligned · badge column">数据表格 · 行悬停 / 选中态 · 数字列对齐 · 徽章列</p>
+    <div class="panel"><header><span class="tag">T</span><span data-en="MANIFEST · UNITS">MANIFEST · 设备清单</span><small>14 UNITS</small></header>
       <div class="body demo-body">
         <table class="hud-table">
           <thead><tr><th>ID</th><th>UNIT</th><th>TYPE</th><th class="num">TEMP °C</th><th class="num">VOLT</th><th>STATUS</th><th class="num">UPTIME</th></tr></thead>
@@ -136,8 +136,8 @@ style.setProperty(<span class="k">"--accent-use"</span>, 0); <span class="c">// 
   <!-- ============ 04 NOTES ============ -->
   <section class="demo" id="notes">
     <h2>04 · NOTES</h2>
-    <p class="sub">笔记应用 · 侧栏列表 + 编辑器 · 选中条即强调色</p>
-    <div class="panel" style="height:260px"><header><span class="tag">N</span>FIELD NOTES · 值班记录<small>3 ENTRIES</small></header>
+    <p class="sub" data-en="Notes app · sidebar list + editor · selection bar is the accent">笔记应用 · 侧栏列表 + 编辑器 · 选中条即强调色</p>
+    <div class="panel" style="height:260px"><header><span class="tag">N</span><span data-en="FIELD NOTES · WATCH LOG">FIELD NOTES · 值班记录</span><small>3 ENTRIES</small></header>
       <div class="body demo-body" style="padding:0">
         <div class="hud-notes fill">
           <div class="note-list" id="note-list"></div>
@@ -153,9 +153,9 @@ style.setProperty(<span class="k">"--accent-use"</span>, 0); <span class="c">// 
   <!-- ============ 05 LAUNCHER ============ -->
   <section class="demo" id="launcher">
     <h2>05 · LAUNCHER</h2>
-    <p class="sub">启动器 · 过滤输入 + 快捷键角标 + 程序格</p>
+    <p class="sub" data-en="Launcher · filter input + shortcut badges + app grid">启动器 · 过滤输入 + 快捷键角标 + 程序格</p>
     <div class="hud-launcher">
-      <input class="hud-input" id="launch-filter" placeholder="FILTER · 输入以过滤,数字直跳">
+      <input class="hud-input" id="launch-filter" placeholder="FILTER · 输入以过滤,数字直跳" data-en-ph="FILTER · type to filter, digits jump">
       <div class="launch-grid" id="launch-grid"></div>
     </div>
   </section>
@@ -163,13 +163,13 @@ style.setProperty(<span class="k">"--accent-use"</span>, 0); <span class="c">// 
   <!-- ============ 06 REPORT ============ -->
   <section class="demo" id="report">
     <h2>06 · REPORT</h2>
-    <p class="sub">报表 · KPI 卡 + 条纹柱 + 点阵迷你图</p>
-    <div class="panel"><header><span class="tag">R</span>WEEKLY OPS REPORT · 周报<small>W41 · 10.05 — 10.11</small></header>
+    <p class="sub" data-en="Report · KPI cards + striped bars + dot-matrix sparkline">报表 · KPI 卡 + 条纹柱 + 点阵迷你图</p>
+    <div class="panel"><header><span class="tag">R</span><span data-en="WEEKLY OPS REPORT">WEEKLY OPS REPORT · 周报</span><small>W41 · 10.05 — 10.11</small></header>
       <div class="body demo-body">
         <div class="hud-kpi-row">
           <div class="hud-kpi-card"><small>PASSES</small><b>1 284</b><span class="trend up">▲ 12.4%</span></div>
           <div class="hud-kpi-card"><small>DOWNLINK GB</small><b>3.92</b><span class="trend up">▲ 4.1%</span></div>
-          <div class="hud-kpi-card"><small>ANOMALIES</small><b>7</b><span class="trend down">▼ 3 起</span></div>
+          <div class="hud-kpi-card"><small>ANOMALIES</small><b>7</b><span class="trend down" data-en="▼ 3">▼ 3 起</span></div>
           <div class="hud-kpi-card"><small>UPTIME</small><b>99.96%</b><span class="trend up">▲ 0.02</span></div>
         </div>
         <div class="two-col">
@@ -189,7 +189,7 @@ style.setProperty(<span class="k">"--accent-use"</span>, 0); <span class="c">// 
   <!-- ============ 07 EXTENDED CONTROLS ============ -->
   <section class="demo" id="extended">
     <h2>07 · EXTENDED CONTROLS</h2>
-    <p class="sub">对照 shadcn/ui 与 Ant Design 补齐的 24 项 · 覆盖矩阵见 tokens/component-checklist.md</p>
+    <p class="sub" data-en="24 items added against shadcn/ui and Ant Design · coverage matrix in tokens/component-checklist.md">对照 shadcn/ui 与 Ant Design 补齐的 24 项 · 覆盖矩阵见 tokens/component-checklist.md</p>
 
     <div class="panel"><header><span class="tag">X1</span>NAVIGATION · 导航类<small>CRUMB / STEPS / SEGMENTED / PAGER</small></header>
       <div class="body demo-body">
@@ -211,7 +211,7 @@ style.setProperty(<span class="k">"--accent-use"</span>, 0); <span class="c">// 
       </div>
     </div>
 
-    <div class="panel"><header><span class="tag">X2</span>MENUS · 菜单类<small>左侧导航 / 下拉 / 右键上下文</small></header>
+    <div class="panel"><header><span class="tag">X2</span>MENUS · 菜单类<small data-en="SIDE NAV / DROPDOWN / CONTEXT">左侧导航 / 下拉 / 右键上下文</small></header>
       <div class="body demo-body">
         <div class="two-col">
           <div class="hud-nav hud-menu" style="border:0;background:transparent;padding:0">
@@ -235,7 +235,7 @@ style.setProperty(<span class="k">"--accent-use"</span>, 0); <span class="c">// 
                 <div class="mi warn">PURGE</div>
               </div>
             </div>
-            <p style="font-size:8px;color:var(--faint);margin-top:12px;line-height:1.8">在下方区域点击右键唤出上下文菜单:</p>
+            <p style="font-size:8px;color:var(--faint);margin-top:12px;line-height:1.8" data-en="Right-click the area below to open the context menu:">在下方区域点击右键唤出上下文菜单:</p>
             <div id="ctx-host" style="border:1px dashed var(--line);padding:18px;font-size:8.5px;color:var(--faint);letter-spacing:0.14em">CONTEXT FIELD · RIGHT-CLICK ME</div>
           </div>
         </div>
@@ -246,10 +246,10 @@ style.setProperty(<span class="k">"--accent-use"</span>, 0); <span class="c">// 
       <div class="body demo-body">
         <div class="two-col">
           <div style="display:flex;flex-direction:column;gap:8px">
-            <div class="hud-alert info"><span class="mk">i</span><div><b>INFO</b>窗口 T+02:11:05 有一次副过顶,持续 4 分 40 秒。</div></div>
-            <div class="hud-alert success"><span class="mk">✓</span><div><b>SUCCESS</b>14 帧已全部入档,校验和一致。</div></div>
-            <div class="hud-alert warn"><span class="mk">△</span><div><b>WARNING</b>北阵列噪声底升高 2 dB,建议周六窗口检修。</div></div>
-            <div class="hud-alert error"><span class="mk">✕</span><div><b>ERROR</b>UQ-103 温度 52.4 °C 超阈值,已降功率。</div></div>
+            <div class="hud-alert info"><span class="mk">i</span><div><b>INFO</b><span data-en="A backup pass at T+02:11:05 lasts 4 min 40 s.">窗口 T+02:11:05 有一次副过顶,持续 4 分 40 秒。</span></div></div>
+            <div class="hud-alert success"><span class="mk">✓</span><div><b>SUCCESS</b><span data-en="14 frames archived, checksums match.">14 帧已全部入档,校验和一致。</span></div></div>
+            <div class="hud-alert warn"><span class="mk">△</span><div><b>WARNING</b><span data-en="North-array noise floor up 2 dB; schedule maintenance for the Saturday window.">北阵列噪声底升高 2 dB,建议周六窗口检修。</span></div></div>
+            <div class="hud-alert error"><span class="mk">✕</span><div><b>ERROR</b><span data-en="UQ-103 at 52.4 °C over threshold; power reduced.">UQ-103 温度 52.4 °C 超阈值,已降功率。</span></div></div>
             <div class="ctl-row">
               <button class="hud-btn" id="pc-btn">POPCONFIRM</button>
               <div id="pc-host" style="position:relative;display:inline-block"></div>
@@ -258,12 +258,12 @@ style.setProperty(<span class="k">"--accent-use"</span>, 0); <span class="c">// 
           <div style="display:flex;flex-direction:column;gap:10px">
             <div class="hud-result">
               <div class="glyph">✓</div><b>DOWNLINK COMPLETE</b>
-              <p>3.92 GB · BER 1e-7 · 用时 04:12 · 校验通过。</p>
+              <p data-en="3.92 GB · BER 1e-7 · took 04:12 · checksum OK.">3.92 GB · BER 1e-7 · 用时 04:12 · 校验通过。</p>
               <div><button class="hud-btn accent">OPEN ARCHIVE</button><button class="hud-btn">CLOSE</button></div>
             </div>
             <div class="hud-empty">
               <div class="glyph"></div><b>NO FRAMES YET</b>
-              <small>该时段没有下行帧,调整过滤器或稍后再试。</small>
+              <small data-en="No downlink frames in this window; adjust filters or retry later.">该时段没有下行帧,调整过滤器或稍后再试。</small>
               <button class="hud-btn" style="margin-top:4px">REFRESH</button>
             </div>
           </div>
@@ -302,15 +302,15 @@ style.setProperty(<span class="k">"--accent-use"</span>, 0); <span class="c">// 
         <div class="ctl-row" style="align-items:center;gap:14px">
           <span class="hud-avatar">UQ</span><span class="hud-avatar sm">K9</span><span class="hud-avatar lg">MB</span><span class="hud-avatar accent">Δ7</span>
           <span style="flex:1"></span>
-          <span style="font-size:8px;color:var(--faint);letter-spacing:0.14em">AVATAR · 默认/小/大/强调</span>
+          <span style="font-size:8px;color:var(--faint);letter-spacing:0.14em" data-en="AVATAR · DEFAULT/SMALL/LARGE/ACCENT">AVATAR · 默认/小/大/强调</span>
         </div>
-        <div class="hud-divider">SEGMENT BREAK · 分隔线</div>
+        <div class="hud-divider" data-en="SEGMENT BREAK · DIVIDER">SEGMENT BREAK · 分隔线</div>
         <div class="two-col">
           <ul class="hud-tl">
-            <li><time>T+00:00</time><b>ACQUIRE</b> · 捕获载波,锁定 -112 dBm</li>
-            <li class="hot"><time>T+00:42</time><b>ALERT</b> · 噪声底升高,切换分集</li>
+            <li><time>T+00:00</time><b>ACQUIRE</b><span data-en=" · carrier acquired, locked at -112 dBm"> · 捕获载波,锁定 -112 dBm</span></li>
+            <li class="hot"><time>T+00:42</time><b>ALERT</b><span data-en=" · noise floor up, switched to diversity"> · 噪声底升高,切换分集</span></li>
             <li><time>T+01:10</time><b>DOWNLINK</b> · 3.92 GB @ 8.2 Mb/s</li>
-            <li><time>T+04:12</time><b>ARCHIVE</b> · 校验通过,入冷存储</li>
+            <li><time>T+04:12</time><b>ARCHIVE</b><span data-en=" · checksum OK, moved to cold storage"> · 校验通过,入冷存储</span></li>
           </ul>
           <div class="ctl-row" style="align-items:center;gap:18px">
             <div class="hud-ring" id="ring1">
@@ -340,16 +340,16 @@ style.setProperty(<span class="k">"--accent-use"</span>, 0); <span class="c">// 
         </div>
         <div class="two-col">
           <div class="hud-combo" id="combo">
-            <input class="hud-input" id="combo-in" placeholder="搜索地面站 · ↑↓ 选择,↵ 确认" autocomplete="off">
+            <input class="hud-input" id="combo-in" placeholder="搜索地面站 · ↑↓ 选择,↵ 确认" data-en-ph="Search ground stations · ↑↓ select, ↵ confirm" autocomplete="off">
             <div class="drop" id="combo-drop"></div>
           </div>
           <div>
-            <div class="hud-upload" id="upload"><b>DROP TELEMETRY BUNDLE</b><br>或点击选择 · ZIP / TLE / CSV</div>
+            <div class="hud-upload" id="upload"><b>DROP TELEMETRY BUNDLE</b><br><span data-en="or click to choose · ZIP / TLE / CSV">或点击选择 · ZIP / TLE / CSV</span></div>
             <div id="files"></div>
           </div>
         </div>
         <div class="hud-field error" style="margin:0">
-          <label>校验态示例 · 频率超出范围</label>
+          <label data-en="Validation state · frequency out of range">校验态示例 · 频率超出范围</label>
           <input class="hud-input" value="999.9 MHz">
           <div class="err">VALID RANGE 118.0 — 162.0 MHz</div>
         </div>
@@ -361,6 +361,7 @@ style.setProperty(<span class="k">"--accent-use"</span>, 0); <span class="c">// 
 <script type="module">
 import { startSparks } from "./js/core/sparks.js";
 import { hash } from "./js/core/util.js";
+import { initLang, onLang, t, lang } from "./js/core/i18n.js";
 
 document.body.dataset.theme = "components";
 startSparks(document.getElementById("sparks"), {
@@ -370,12 +371,16 @@ startSparks(document.getElementById("sparks"), {
 
 // tabs
 const tabs = document.querySelectorAll("#tabs button");
-const panelText = ["当前页签内容区。页签下划线即强调色,切换由 8 行原生 JS 完成。",
+const PANEL_ZH = ["当前页签内容区。页签下划线即强调色,切换由 8 行原生 JS 完成。",
   "UPLINK 面板:链路预算、增益曲线、转发器占用。", "DIAGNOSTIC 面板:误码率、温度漂移、自检日志。"];
+const PANEL_EN = ["Tab content area. The underline is the accent colour; switching is 8 lines of vanilla JS.",
+  "UPLINK panel: link budget, gain curves, transponder occupancy.", "DIAGNOSTIC panel: BER, temperature drift, self-test logs."];
 tabs.forEach((b, i) => b.addEventListener("click", () => {
   tabs.forEach((x) => x.classList.remove("on"));
   b.classList.add("on");
-  document.getElementById("tab-panel").textContent = panelText[i];
+  const p = document.getElementById("tab-panel");
+  p.textContent = t(PANEL_ZH[i], PANEL_EN[i]);
+  p.dataset.zh = PANEL_ZH[i]; p.dataset.en = PANEL_EN[i];
 }));
 
 // gain slider
@@ -389,7 +394,7 @@ gain.addEventListener("input", () => {
 document.getElementById("toast-btn").addEventListener("click", () => {
   const el = document.createElement("div");
   el.className = "hud-toast";
-  el.innerHTML = `<b>TX QUEUED</b> · 14 帧已进入上行队列`;
+  el.innerHTML = `<b>TX QUEUED</b> · ${t("14 帧已进入上行队列", "14 frames queued for uplink")}`;
   document.body.append(el);
   setTimeout(() => el.classList.add("out"), 2400);
   setTimeout(() => el.remove(), 2900);
@@ -400,7 +405,7 @@ document.getElementById("modal-btn").addEventListener("click", () => {
   const back = document.createElement("div");
   back.className = "hud-modal-back";
   back.innerHTML = `<div class="hud-modal"><h3>CONFIRM ABORT</h3>
-    <p>回撤序列不可逆:先 HOLD 窗口 90 秒,再切断上行。确认执行?</p>
+    <p>${t("回撤序列不可逆:先 HOLD 窗口 90 秒,再切断上行。确认执行?", "Abort is irreversible: HOLD the window for 90 s, then cut uplink. Proceed?")}</p>
     <button class="hud-btn danger" id="m-yes">EXECUTE</button><button class="hud-btn" id="m-no">CANCEL</button></div>`;
   back.addEventListener("click", (e) => { if (e.target === back) back.remove(); });
   back.querySelector("#m-no").addEventListener("click", () => back.remove());
@@ -463,23 +468,33 @@ document.querySelectorAll("#tbody tr").forEach((tr) =>
   }));
 
 // notes
-const notes = [
-  { t: "交接 · 10.09 夜班", b: "北阵列馈源噪声升高 2 dB,已排期周六窗口更换。GUARD 频段的底噪仍需关注。", ts: "10.09 · 22:14" },
-  { t: "发射窗口复盘", b: "W41 两次过顶均提前 4 秒锁定,建议把捕获阈值从 -118 调到 -115 dBm。", ts: "10.07 · 09:40" },
-  { t: "备件库存", b: "LNA 备件余 1,SBC 余 3。下一次补给船 11 月初,记得申报固态功放。", ts: "10.05 · 16:02" },
-];
+const NOTES = {
+  zh: [
+    { t: "交接 · 10.09 夜班", b: "北阵列馈源噪声升高 2 dB,已排期周六窗口更换。GUARD 频段的底噪仍需关注。", ts: "10.09 · 22:14" },
+    { t: "发射窗口复盘", b: "W41 两次过顶均提前 4 秒锁定,建议把捕获阈值从 -118 调到 -115 dBm。", ts: "10.07 · 09:40" },
+    { t: "备件库存", b: "LNA 备件余 1,SBC 余 3。下一次补给船 11 月初,记得申报固态功放。", ts: "10.05 · 16:02" },
+  ],
+  en: [
+    { t: "HANDOVER · 10.09 NIGHT WATCH", b: "North-array feed noise up 2 dB; replacement scheduled for the Saturday window. Keep an eye on the GUARD band floor.", ts: "10.09 · 22:14" },
+    { t: "Launch window retro", b: "Both W41 passes locked 4 s early; suggest raising the acquisition threshold from -118 to -115 dBm.", ts: "10.07 · 09:40" },
+    { t: "Spare parts stock", b: "1 LNA and 3 SBCs left. Next supply ship early November; remember to file the SSPA request.", ts: "10.05 · 16:02" },
+  ],
+};
+const curNotes = () => NOTES[lang];
 const listEl = document.getElementById("note-list");
-listEl.innerHTML = notes.map((n, i) => `<div class="note-item${i === 0 ? " on" : ""}" data-i="${i}"><b>${n.t}</b><small>${n.ts}</small></div>`).join("");
 const titleEl = document.getElementById("note-title"), bodyEl = document.getElementById("note-body");
-const show = (i) => { titleEl.value = notes[i].t; bodyEl.value = notes[i].b; };
-show(0);
+const renderNotes = (sel = 0) => {
+  const arr = curNotes();
+  listEl.innerHTML = arr.map((n, i) => `<div class="note-item${i === sel ? " on" : ""}" data-i="${i}"><b>${n.t}</b><small>${n.ts}</small></div>`).join("");
+  titleEl.value = arr[sel].t; bodyEl.value = arr[sel].b;
+};
+renderNotes();
 listEl.addEventListener("click", (e) => {
   const it = e.target.closest(".note-item");
   if (!it) return;
-  listEl.querySelectorAll(".note-item").forEach((x) => x.classList.remove("on"));
-  it.classList.add("on");
-  show(Number(it.dataset.i));
+  renderNotes(Number(it.dataset.i));
 });
+onLang(() => renderNotes());
 
 // launcher
 const apps = [
@@ -567,7 +582,7 @@ document.getElementById("pc-btn").addEventListener("click", (e) => {
   const p = document.createElement("div");
   p.className = "hud-popover hud-popconfirm";
   p.style.cssText = `position:fixed;left:${e.clientX}px;top:${e.clientY + 14}px`;
-  p.innerHTML = `<b>PURGE QUEUE</b>清空 14 帧待上行数据,不可恢复。确认?
+  p.innerHTML = `<b>PURGE QUEUE</b><span>${t("清空 14 帧待上行数据,不可恢复。确认?", "Purge 14 queued uplink frames, no undo. Confirm?")}</span>
     <div class="row"><button class="hud-btn ok">CONFIRM</button><button class="hud-btn no">CANCEL</button></div>`;
   document.body.append(p);
   p.querySelector(".no").addEventListener("click", () => p.remove());
@@ -612,7 +627,7 @@ const renderCombo = () => {
   comboList = STATIONS.filter((s) => s[0].includes(f));
   comboDrop.innerHTML = comboList.length
     ? comboList.map((s, i) => `<div class="opt${i === comboIdx ? " on" : ""}" data-i="${i}">${s[0]}<small>${s[1]}</small></div>`).join("")
-    : `<div class="none">NO MATCH · 无匹配地面站</div>`;
+    : `<div class="none">${t("NO MATCH · 无匹配地面站", "NO MATCH · no ground station found")}</div>`;
 };
 comboIn.addEventListener("focus", () => { combo.classList.add("open"); comboIdx = -1; renderCombo(); });
 comboIn.addEventListener("input", () => { comboIdx = -1; renderCombo(); });
@@ -695,6 +710,8 @@ function syncScheme() {
   schemeNav.querySelectorAll("button").forEach((b) => b.classList.toggle("on", b.dataset.scheme === cur));
 }
 syncScheme();
+onLang(() => { renderNotes(); });
+initLang(document.getElementById("lang-nav"));
 </script>
 </body>
 </html>

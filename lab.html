@@ -38,42 +38,42 @@
         <path d="M5 21 L11 9 L15 16 L18 12 L23 21 Z"/>
         <path d="M6 23 L22 5" stroke-dasharray="1 2"/>
       </svg>
-      <div><b>TOKEN LAB</b><small>SPARK · 单色 / 点缀色 · 参数台</small></div>
+      <div><b>TOKEN LAB</b><small data-en="SPARK · MONO / SCATTER · PARAM DECK">SPARK · 单色 / 点缀色 · 参数台</small></div>
     </div>
     <div class="ticker" id="ticker"><span></span><span></span><span></span></div>
-    <div class="clock"><div class="pages"><a href="index.html">CONSOLE</a><a href="components.html">COMPONENTS</a></div><div class="pages" id="scheme-nav"></div><div><small id="date"></small><b id="clock"></b></div></div>
+    <div class="clock"><div class="pages"><a href="index.html">CONSOLE</a><a href="components.html">COMPONENTS</a></div><div class="pages" id="lang-nav"></div><div class="pages" id="scheme-nav"></div><div><small id="date"></small><b id="clock"></b></div></div>
   </header>
 
   <aside class="col left">
     <section class="panel" style="flex:1.2">
       <header><span class="tag">CTL</span>点缀色参数<small>SPARK TOKENS</small></header>
       <div class="body" style="overflow:auto">
-        <div class="ctl"><div class="lbl"><span>DENSITY · 微粒密度</span><output id="o-density">110</output></div>
+        <div class="ctl"><div class="lbl"><span data-en="DENSITY · PARTICLE COUNT">DENSITY · 微粒密度</span><output id="o-density">110</output></div>
           <input class="hud-range" type="range" id="p-density" min="0" max="400" step="5" value="110"></div>
-        <div class="ctl"><div class="lbl"><span>RATIO · 着色占比</span><output id="o-ratio">0.14</output></div>
+        <div class="ctl"><div class="lbl"><span data-en="RATIO · COLOURED SHARE">RATIO · 着色占比</span><output id="o-ratio">0.14</output></div>
           <input class="hud-range" type="range" id="p-ratio" min="0" max="1" step="0.01" value="0.14"></div>
-        <div class="ctl"><div class="lbl"><span>SPEED · 流转速度</span><output id="o-speed">1.0</output></div>
+        <div class="ctl"><div class="lbl"><span data-en="SPEED · DRIFT SPEED">SPEED · 流转速度</span><output id="o-speed">1.0</output></div>
           <input class="hud-range" type="range" id="p-speed" min="0" max="4" step="0.05" value="1"></div>
-        <div class="ctl"><div class="lbl"><span>SIZE · 粒径</span><output id="o-size">1.4</output></div>
+        <div class="ctl"><div class="lbl"><span data-en="SIZE · PARTICLE SIZE">SIZE · 粒径</span><output id="o-size">1.4</output></div>
           <input class="hud-range" type="range" id="p-size" min="0.4" max="5" step="0.1" value="1.4"></div>
-        <div class="ctl"><div class="lbl"><span>TURBULENCE · 流场强度</span><output id="o-turb">0.0016</output></div>
+        <div class="ctl"><div class="lbl"><span data-en="TURBULENCE · FLOW FIELD">TURBULENCE · 流场强度</span><output id="o-turb">0.0016</output></div>
           <input class="hud-range" type="range" id="p-turb" min="0" max="0.005" step="0.0001" value="0.0016"></div>
-        <div class="ctl"><div class="lbl"><span>COMET · 彗星间隔 S</span><output id="o-comet">2.4</output></div>
+        <div class="ctl"><div class="lbl"><span data-en="COMET · COMET INTERVAL S">COMET · 彗星间隔 S</span><output id="o-comet">2.4</output></div>
           <input class="hud-range" type="range" id="p-comet" min="0" max="10" step="0.2" value="2.4"></div>
-        <div class="ctl"><div class="lbl"><span>OPACITY · 整体不透明度</span><output id="o-opac">0.60</output></div>
+        <div class="ctl"><div class="lbl"><span data-en="OPACITY · GLOBAL OPACITY">OPACITY · 整体不透明度</span><output id="o-opac">0.60</output></div>
           <input class="hud-range" type="range" id="p-opac" min="0" max="1" step="0.05" value="0.6"></div>
-        <div class="ctl"><div class="lbl"><span>PALETTE · 点缀调色板</span></div>
+        <div class="ctl"><div class="lbl"><span data-en="PALETTE · SCATTER PALETTE">PALETTE · 点缀调色板</span></div>
           <div class="swatches" id="palette">
-            <label class="swatch"><input type="checkbox" value="255,154,60" checked><i style="background:rgb(255,154,60)"></i>琥珀</label>
-            <label class="swatch"><input type="checkbox" value="255,77,61"><i style="background:rgb(255,77,61)"></i>红</label>
-            <label class="swatch"><input type="checkbox" value="70,216,255"><i style="background:rgb(70,216,255)"></i>青</label>
-            <label class="swatch"><input type="checkbox" value="186,255,92"><i style="background:rgb(186,255,92)"></i>荧绿</label>
+            <label class="swatch"><input type="checkbox" value="255,154,60" checked><i style="background:rgb(255,154,60)"></i><span data-en="AMBER">琥珀</span></label>
+            <label class="swatch"><input type="checkbox" value="255,77,61"><i style="background:rgb(255,77,61)"></i><span data-en="RED">红</span></label>
+            <label class="swatch"><input type="checkbox" value="70,216,255"><i style="background:rgb(70,216,255)"></i><span data-en="CYAN">青</span></label>
+            <label class="swatch"><input type="checkbox" value="186,255,92"><i style="background:rgb(186,255,92)"></i><span data-en="LIME">荧绿</span></label>
           </div></div>
         <div class="presets">
-          <button class="hud-btn" data-preset="mono">纯单色</button>
-          <button class="hud-btn" data-preset="dust">微点缀</button>
-          <button class="hud-btn" data-preset="scatter">橙红散布</button>
-          <button class="hud-btn" data-preset="rain">彗雨</button>
+          <button class="hud-btn" data-preset="mono" data-en="MONO">纯单色</button>
+          <button class="hud-btn" data-preset="dust" data-en="DUST">微点缀</button>
+          <button class="hud-btn" data-preset="scatter" data-en="SCATTER">橙红散布</button>
+          <button class="hud-btn" data-preset="rain" data-en="COMET RAIN">彗雨</button>
         </div>
       </div>
     </section>
@@ -81,11 +81,12 @@
     <section class="panel">
       <header><span class="tag">UI</span>强调色参与<small>ACCENT-USE</small></header>
       <div class="body">
-        <div class="ctl"><div class="lbl"><span>ACCENT-USE · 左侧</span><output id="o-au-l">1.0</output></div>
+        <div class="ctl"><div class="lbl"><span data-en="ACCENT-USE · LEFT">ACCENT-USE · 左侧</span><output id="o-au-l">1.0</output></div>
           <input class="hud-range" type="range" id="au-l" min="0" max="1" step="0.05" value="1"></div>
-        <div class="ctl"><div class="lbl"><span>ACCENT-USE · 右侧</span><output id="o-au-r">1.0</output></div>
+        <div class="ctl"><div class="lbl"><span data-en="ACCENT-USE · RIGHT">ACCENT-USE · 右侧</span><output id="o-au-r">1.0</output></div>
           <input class="hud-range" type="range" id="au-r" min="0" max="1" step="0.05" value="1"></div>
-        <p style="font-size:8px;color:var(--faint);line-height:1.8;letter-spacing:0.06em">
+        <p style="font-size:8px;color:var(--faint);line-height:1.8;letter-spacing:0.06em"
+     data-en="0 = fully monochrome UI (accent collapses to ink); 1 = full accent participation. Independent of RATIO: RATIO drives the screen sparks, ACCENT-USE drives UI controls.">
           0 = 完全单色界面(强调色全部退成白);1 = 强调色全额参与。与 RATIO 独立:RATIO 管屏幕火星,ACCENT-USE 管界面控件。</p>
       </div>
     </section>
@@ -93,15 +94,16 @@
     <section class="panel">
       <header><span class="tag">AC</span>主色 · 强调色<small>ACCENT HUE</small></header>
       <div class="body">
-        <div class="ctl"><div class="lbl"><span>ACCENT · 界面主色</span><output id="o-accent">#ff9a3c</output></div>
+        <div class="ctl"><div class="lbl"><span data-en="ACCENT · UI ACCENT HUE">ACCENT · 界面主色</span><output id="o-accent">#ff9a3c</output></div>
           <div class="ctl-row" style="gap:6px">
             <input type="color" id="p-accent" value="#ff9a3c" style="width:44px;height:24px;padding:0;border:var(--line-w) solid var(--line);background:transparent;cursor:pointer">
-            <button class="hud-btn" data-acc="#ff9a3c" style="font-size:7.5px;padding:4px 8px;margin:0">琥珀</button>
-            <button class="hud-btn" data-acc="#ff4d3d" style="font-size:7.5px;padding:4px 8px;margin:0">红</button>
-            <button class="hud-btn" data-acc="#46d8ff" style="font-size:7.5px;padding:4px 8px;margin:0">青</button>
-            <button class="hud-btn" data-acc="#baff5c" style="font-size:7.5px;padding:4px 8px;margin:0">荧绿</button>
+            <button class="hud-btn" data-acc="#ff9a3c" data-en="AMBER" style="font-size:7.5px;padding:4px 8px;margin:0">琥珀</button>
+            <button class="hud-btn" data-acc="#ff4d3d" data-en="RED" style="font-size:7.5px;padding:4px 8px;margin:0">红</button>
+            <button class="hud-btn" data-acc="#46d8ff" data-en="CYAN" style="font-size:7.5px;padding:4px 8px;margin:0">青</button>
+            <button class="hud-btn" data-acc="#baff5c" data-en="LIME" style="font-size:7.5px;padding:4px 8px;margin:0">荧绿</button>
           </div></div>
-        <p style="font-size:8px;color:var(--faint);line-height:1.8;letter-spacing:0.06em">
+        <p style="font-size:8px;color:var(--faint);line-height:1.8;letter-spacing:0.06em"
+     data-en="Overrides --accent / --accent-rgb on :root: both panes and the console re-ink together; buttons, badges, progress bars and tabs update live. The spark palette above stays independent. Works in both schemes; reproducible via ?accent=ff9a3c.">
           在 :root 上覆盖 --accent / --accent-rgb:两侧预览与左侧控制台同步换色,按钮、徽章、进度条、页签等全部强调位即时生效;火星点缀色由上方 PALETTE 独立控制,互不影响。深浅两种场景同时生效,可用 ?accent=ff9a3c 复现。</p>
       </div>
     </section>
@@ -109,9 +111,10 @@
     <section class="panel">
       <header><span class="tag">LN</span>线条系统<small>LINE TOKENS</small></header>
       <div class="body">
-        <div class="ctl"><div class="lbl"><span>LINE-W · 全局线宽 PX</span><output id="o-linew">1.0</output></div>
+        <div class="ctl"><div class="lbl"><span data-en="LINE-W · GLOBAL WIDTH PX">LINE-W · 全局线宽 PX</span><output id="o-linew">1.0</output></div>
           <input class="hud-range" type="range" id="p-linew" min="0.5" max="3" step="0.5" value="1"></div>
-        <p style="font-size:8px;color:var(--faint);line-height:1.8;letter-spacing:0.06em">
+        <p style="font-size:8px;color:var(--faint);line-height:1.8;letter-spacing:0.06em"
+     data-en="Panel borders, dividers and control strokes share --line-w; corner brackets use --bracket-w. 0.5 = hairline scanlines, 2 = heavy instrument stroke.">
           面板边框、分隔线、控件描边共用 --line-w;角括弧用 --bracket-w。0.5 = 发丝级扫描线,2 = 粗描边仪表感。</p>
       </div>
     </section>
@@ -127,7 +130,7 @@
       <div class="preview" id="pvL">
         <canvas class="lab-sparks"></canvas>
         <div class="pv-inner">
-          <div class="pv-head"><b>MONO · 单色基准</b><span class="cfg" id="cfgL"></span></div>
+          <div class="pv-head"><b data-en="MONO · BASELINE">MONO · 单色基准</b><span class="cfg" id="cfgL"></span></div>
           <section class="panel" style="flex:1">
             <header><span class="tag">A</span>TELEMETRY<small>SAMPLE</small></header>
             <div class="body" style="display:flex;flex-direction:column;gap:10px;justify-content:center">
@@ -142,7 +145,7 @@
       <div class="preview" id="pvR">
         <canvas class="lab-sparks"></canvas>
         <div class="pv-inner">
-          <div class="pv-head"><b>SCATTER · 点缀色</b><span class="cfg" id="cfgR"></span></div>
+          <div class="pv-head"><b data-en="SCATTER · ACCENTED">SCATTER · 点缀色</b><span class="cfg" id="cfgR"></span></div>
           <section class="panel" style="flex:1">
             <header><span class="tag">A</span>TELEMETRY<small>SAMPLE</small></header>
             <div class="body" style="display:flex;flex-direction:column;gap:10px;justify-content:center">
@@ -165,6 +168,7 @@
 import { startChrome } from "./js/core/chrome.js";
 import { startSparks } from "./js/core/sparks.js";
 import { refreshPalette, pal } from "./js/core/palette.js";
+import { initLang, onLang, t } from "./js/core/i18n.js";
 
 const $ = (id) => document.getElementById(id);
 
@@ -296,8 +300,8 @@ document.querySelectorAll("[data-preset]").forEach((b) =>
 
 function resolve() {
   sL.setConfig(L); sR.setConfig(R);
-  $("cfgL").textContent = `ratio 0 · ${pal.isLight ? "墨色" : "纯白"}`;
-  $("cfgR").textContent = `ratio ${R.ratio.toFixed(2)} · ${R.palette.length ? R.palette.length + " 色" : "无"}`;
+  $("cfgL").textContent = `ratio 0 · ${pal.isLight ? t("墨色", "INK") : t("纯白", "PAPER")}`;
+  $("cfgR").textContent = `ratio ${R.ratio.toFixed(2)} · ${R.palette.length ? R.palette.length + t(" 色", "C") : t("无", "NONE")}`;
   $("tokout").textContent = JSON.stringify({ spark: {
     density: R.density, ratio: R.ratio, palette: R.palette, speed: R.speed,
     size: [R.sizeMin, R.sizeMax], turbulence: R.turbulence,
@@ -306,6 +310,9 @@ function resolve() {
   "line-w": $("p-linew").value + "px", "scheme": document.documentElement.dataset.scheme }, null, 1);
 }
 resolve();
+
+onLang(() => resolve());
+initLang(document.getElementById("lang-nav"));
 
 // chrome dressing for the lab shell itself
 startChrome({ chrome: { codes: ["TUNE", "RENDER", "DIFF", "LOCK"], copyright: "© HUD FRAMEWORK · TOKEN LAB" }, tag: "tokens/base.json" }, {});

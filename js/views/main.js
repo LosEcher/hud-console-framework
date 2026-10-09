@@ -15,6 +15,13 @@ const $ = (id) => document.getElementById(id);
 
 const THEME_IDS = ["ember", "orbital", "cinder"];
 
+// URL-level accent override: ?accent=rrggbb re-inks the whole console regardless
+// of the active theme (light scheme included). Same contract as lab.html.
+const ACCENT_OVERRIDE = (() => {
+  const v = (new URLSearchParams(location.search).get("accent") || "").replace(/^#/, "");
+  return /^[0-9a-f]{6}$/i.test(v) ? "#" + v.toLowerCase() : null;
+})();
+
 let stopLoop = null;
 let sparks = null;
 let currentTheme = THEME_IDS[0];
@@ -50,6 +57,11 @@ async function applyTheme(id) {
     r.setProperty("--bg2", theme.tokens.bg2 ?? "#0b0b0d");
   }
   r.setProperty("--accent-use", theme.tokens.accentUse ?? 1);
+  if (ACCENT_OVERRIDE) {
+    const n = parseInt(ACCENT_OVERRIDE.slice(1), 16);
+    r.setProperty("--accent", ACCENT_OVERRIDE);
+    r.setProperty("--accent-rgb", `${(n >> 16) & 255},${(n >> 8) & 255},${n & 255}`);
+  }
   refreshPalette();
 
   // ---------- spark embers ----------

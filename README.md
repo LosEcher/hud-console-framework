@@ -34,8 +34,9 @@ Any static file server works too — there is no build step.
 | `components.html` | Component library (01 basics · 02 terminal · 03 table · 04 notes · 05 launcher · 06 report · 07 extended, 24 items) |
 | `lab.html` | Token lab (spark particle params / line width / scheme switch, all reproducible via URL) |
 
-URL params: `?theme=ember|orbital|cinder` `?scheme=dark|light` `?linew=0.5..3`.
-The lab additionally accepts `?density=&ratio=&opacity=&comet=&accent=rrggbb`.
+URL params (every page): `?scheme=dark|light` `?linew=0.5..3` `?accent=rrggbb` (re-ink the accent hue, any theme).
+Index additionally accepts `?theme=ember|orbital|cinder`; the lab additionally accepts `?density=&ratio=&opacity=&comet=`.
+lab and components are bilingual (ZH/EN toggle in the top bar, auto-detected; override with `?lang=zh|en`).
 
 ## Directory layout
 
