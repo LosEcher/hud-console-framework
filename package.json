@@ -1,0 +1,15 @@
+{
+  "name": "hud-console-framework",
+  "version": "1.0.0",
+  "description": "Token-driven sci-fi HUD console framework · dark/light dual-scheme · zero-dependency",
+  "license": "MIT",
+  "private": false,
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/LosEcher/hud-console-framework"
+  },
+  "scripts": {
+    "dev": "node server.mjs"
+  }
+}

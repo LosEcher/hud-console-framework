@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HUD CONSOLE</title>
+<link rel="stylesheet" href="css/hud.css">
+<style id="page-style"></style>
+</head>
+<body>
+<div class="frame">
+  <header class="top">
+    <div class="brand">
+      <svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1">
+        <rect x="0.5" y="0.5" width="27" height="27"/>
+        <path d="M5 21 L11 9 L15 16 L18 12 L23 21 Z"/>
+        <path d="M6 23 L22 5" stroke-dasharray="1 2"/>
+      </svg>
+      <div><b id="brand-name">CONSOLE</b><small id="brand-sub">HUD FRAMEWORK</small></div>
+    </div>
+    <div class="ticker" id="ticker"><span></span><span></span><span></span></div>
+    <div class="pages" id="site-nav"><a href="lab.html">LAB</a><a href="components.html">COMPONENTS</a></div>
+    <div class="pages" id="theme-nav"></div>
+    <div class="clock">
+      <div class="legend" id="legend"></div>
+      <div><small id="date"></small><b id="clock"></b></div>
+    </div>
+  </header>
+
+  <aside class="col left">
+    <section class="panel telemetry">
+      <header><span class="tag">A</span><span class="p-title">REPLAY</span><small class="p-note" id="replay-note"></small></header>
+      <div class="body">
+        <div class="radar"><canvas id="ring"></canvas></div>
+        <div class="kpis" id="kpis"></div>
+      </div>
+    </section>
+
+    <section class="panel checkpoints" style="flex: 1.6">
+      <header><span class="tag">B</span><span class="p-title">WAYPOINTS</span><small class="p-note" id="wp-note"></small></header>
+      <div class="body">
+        <table>
+          <thead><tr><th>ID</th><th>NAME</th><th class="num">KM</th><th class="num">ALT</th><th class="num">⌛</th></tr></thead>
+          <tbody id="checkpoints"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="panel">
+      <header><span class="tag">C</span><span class="p-title">FORMATS</span><small class="p-note"></small></header>
+      <div class="body"><canvas id="formats"></canvas></div>
+    </section>
+
+    <section class="panel">
+      <header><span class="tag">D</span><span class="p-title">SCHEDULE</span><small class="p-note"></small></header>
+      <div class="body"><canvas id="finish"></canvas></div>
+    </section>
+  </aside>
+
+  <main class="center">
+    <section class="panel viewport">
+      <canvas id="terrain"></canvas>
+      <canvas id="terrain-hud"></canvas>
+      <header><span class="tag">01</span><span class="p-title" id="vp-title">TERRAIN</span><small class="p-note" id="vp-note"></small></header>
+      <div class="hint">DRAG · ORBIT &nbsp;&nbsp; WHEEL · ZOOM &nbsp;&nbsp; DBL-CLICK · RESET</div>
+      <div class="mode" id="realism"><button data-real="0">MONO</button><button data-real="1" class="on">NATURAL</button></div>
+    </section>
+    <div class="row">
+      <section class="panel profile-panel">
+        <header><span class="tag">E</span><span class="p-title">ELEVATION PROFILE</span><small class="p-note" id="profile-note"></small></header>
+        <div class="body">
+          <canvas id="profile"></canvas>
+          <div class="big"><small id="big-label">ALTITUDE</small><span id="profile-alt"></span></div>
+        </div>
+      </section>
+      <section class="panel">
+        <header><span class="tag">F</span><span class="p-title">GRADIENT / KM</span><small class="p-note"></small></header>
+        <div class="body"><canvas id="gradient"></canvas></div>
+      </section>
+    </div>
+  </main>
+
+  <aside class="col right">
+    <section class="panel globe-panel">
+      <header><span class="tag">G</span><span class="p-title">ORIGINS</span><small class="p-note" id="globe-note"></small></header>
+      <div class="body">
+        <canvas id="globe"></canvas>
+        <canvas id="globe-hud"></canvas>
+        <div class="readout" id="globe-readout"></div>
+        <div class="readout right" id="globe-hub"></div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <header><span class="tag">H</span><span class="p-title">CUMULATIVE</span><small class="p-note"></small></header>
+      <div class="body"><canvas id="cumulative"></canvas></div>
+    </section>
+
+    <section class="panel">
+      <header><span class="tag">I</span><span class="p-title">RESULTS</span><small class="p-note"></small></header>
+      <div class="body"><div class="results" id="results"></div></div>
+    </section>
+
+    <section class="panel log-panel">
+      <header><span class="tag">J</span><span class="p-title">EVENT LOG</span><small class="p-note">LIVE</small></header>
+      <div class="body"><ul id="log"></ul></div>
+    </section>
+  </aside>
+
+  <footer class="bottom" id="footer"></footer>
+</div>
+<canvas id="grain"></canvas>
+<script type="module" src="js/views/main.js"></script>
+</body>
+</html>
