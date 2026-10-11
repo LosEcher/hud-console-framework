@@ -14,6 +14,10 @@ A sci-fi HUD console framework distilled from the aesthetic of [beastydesign/sci
 |---|---|
 | ![orbital](docs/screenshots/theme-orbital.png) | ![cinder](docs/screenshots/theme-cinder.png) |
 
+Chokepoint watch (strait.html — vessel transit console, light paper scheme by default):
+
+![strait](docs/screenshots/strait.png)
+
 Full component library (terminal / table / notes / launcher / report + 24 extended controls mapped against shadcn/ui and Ant Design):
 
 ![components](docs/screenshots/components.png)
@@ -31,6 +35,7 @@ Any static file server works too — there is no build step.
 | Entry | Purpose |
 |---|---|
 | `index.html` | Main console demo (3D terrain + 2D instrument panels, 3 switchable themes) |
+| `strait.html` | Chokepoint watch demo (vessel-transit traffic console — a "business skin" built on the core layers; write-up in [docs/custom-console.md](docs/custom-console.md)) |
 | `components.html` | Component library (01 basics · 02 terminal · 03 table · 04 notes · 05 launcher · 06 report · 07 extended, 24 items) |
 | `lab.html` | Token lab (spark particle params / line width / scheme switch, all reproducible via URL) |
 
@@ -42,7 +47,7 @@ lab and components are bilingual (ZH/EN toggle in the top bar, auto-detected; ov
 
 ```
 hud-framework/
-├── index.html / lab.html / components.html   three entry pages
+├── index.html / strait.html / lab.html / components.html   four entry pages
 ├── server.mjs / package.json                 zero-dependency static dev server
 ├── assets/fonts/                             IBM Plex Mono (the only font, OFL license)
 ├── css/

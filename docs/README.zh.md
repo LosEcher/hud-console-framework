@@ -14,6 +14,10 @@
 |---|---|
 | ![orbital](../docs/screenshots/theme-orbital.png) | ![cinder](../docs/screenshots/theme-cinder.png) |
 
+船只通行监控台(strait.html —— 用核心层承载新业务主题的「皮肤」案例,方法沉淀见 [custom-console.md](custom-console.md),默认浅色纸墨):
+
+![strait](../docs/screenshots/strait.png)
+
 控件库全览(terminal / table / notes / launcher / report + 对照 shadcn·AntD 补齐的 24 项扩展控件):
 
 ![components](../docs/screenshots/components.png)
@@ -31,6 +35,7 @@ npm run dev        # -> http://localhost:7100 (或 PORT 环境变量)
 | 入口 | 用途 |
 |---|---|
 | `index.html` | 主控台演示(3D 地形 + 2D 仪表,三主题可切) |
+| `strait.html` | 船只通行监控台演示(海峡 chokepoint 交通台 —— 核心层复用的「业务皮肤」案例,见 [custom-console.md](custom-console.md)) |
 | `components.html` | 控件库(01 基础 · 02 终端 · 03 表格 · 04 笔记 · 05 启动器 · 06 报表 · 07 扩展 24 项) |
 | `lab.html` | 令牌实验室(点缀色参数 / 线宽 / 场景切换,全部可 URL 复现) |
 
@@ -42,7 +47,7 @@ lab 与 components 为中英双语(顶栏 ZH/EN 切换,自动检测浏览器语�
 
 ```
 hud-framework/
-├── index.html / lab.html / components.html   三个入口页
+├── index.html / strait.html / lab.html / components.html   四个入口页
 ├── server.mjs / package.json                 零依赖静态开发服务器
 ├── assets/fonts/                             IBM Plex Mono(唯一字体,OFL 许可)
 ├── css/
