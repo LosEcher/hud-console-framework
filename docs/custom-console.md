@@ -69,7 +69,12 @@ function setScheme(s) {
 }
 ```
 
-两个容易漏的坑都标了星：scheme 切换后**静态层必须重建**（浅色墨水和深色墨水不是反色关系，是两套独立调色），**sparks 必须重启**（palette 是 startSparks 时的快照）。
+两个容易漏的坑都标了星：scheme 切换后**静态层必须重建**（浅色墨水和深色墨水不是反色关系，是两套独立调色），**sparks 必须重启**（palette 是 startSparks 时的快照）。语言切换同理——静态层里烘焙着锚地/罗盘等文案标签，`onLang` 里同样要把重建 key 置空。
+
+另外两个在 review 中实际踩过的坑：
+
+- **循环里的时间变量不要叫 `t`**。i18n 的 `t(zh, en)` 一旦被 `const t = now / 1000` 遮罩，帧函数里所有 `t()` 调用全部变成 "t is not a function"，且报错指向的行号具有迷惑性。约定：帧时间用 `tm`/`sec`，或把 i18n 函数别名导入（`t as tt`）。
+- **`scramble` 对 CJK 不友好**。它的字符合成表只有 `0123456789#%/<>`，中文字符会被当作"未落盘"逐字替换成乱码符号。含汉字的值包一层 CJK 感知 helper（`/[㐀-鿿]/` 命中就直接 `textContent` 落盘），纯数字/英文才走 scramble。
 
 URL 契约与 index 保持一致：`?scheme=dark|light`、`?accent=rrggbb`（重染强调色），这个监控台默认 `light`（纸墨是它的原生场景）。
 
@@ -82,13 +87,16 @@ URL 契约与 index 保持一致：`?scheme=dark|light`、`?accent=rrggbb`（重
 - [ ] 无投影、无圆角面板，深度只由边框/渐变/括弧表达；
 - [ ] 页面专属样式全部在 page-style 内，核心 css 零改动；
 - [ ] scheme 切换后静态层重建、sparks 重启；
-- [ ] 时间压缩收敛为单个常量，模拟与渲染解耦。
+- [ ] 时间压缩收敛为单个常量，模拟与渲染解耦;
+- [ ] 帧循环/帧函数里的时间变量不叫 `t`（会遮罩 i18n 的 `t()`，报错位移极具迷惑性）;
+- [ ] 含 CJK 的数值不走 scramble 的 ASCII 字符合成（乱码闪烁），包一层 CJK 感知 helper;
+- [ ] 依赖 i18n 的静态文案若烘焙进静态层，`onLang` 里与 scheme 切换一样重建。
 
 ## 本次演练改动清单
 
 | 文件 | 动作 |
 |---|---|
-| `strait.html` | 新增：页面骨架 + page-style 布局 |
-| `js/views/strait.js` | 新增：船队模型 / 海峡海图 / 6 个仪表 |
+| `strait.html` | 新增：页面骨架 + page-style 布局（ZH/EN `data-en` 标签） |
+| `js/views/strait.js` | 新增：船队模型 / 海峡海图 / 6 个仪表（i18n `t()` + `setVal` CJK 感知 scramble） |
 | `index.html` | 导航加 STRAIT 入口 |
 | `docs/custom-console.md` | 本文 |
