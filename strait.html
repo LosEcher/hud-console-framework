@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="en">
+<html lang="zh">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>STRAIT WATCH — HUD CONSOLE</title>
+<title>海峡守望 — HUD CONSOLE</title>
 <link rel="stylesheet" href="css/hud.css">
 <style id="page-style">
   /* STRAIT WATCH — chokepoint monitoring console.
@@ -78,10 +78,11 @@
 
   /* alert feed */
   .feed { list-style: none; position: absolute; inset: 0; overflow: hidden; font-size: 8.5px; }
-  .feed li { display: grid; grid-template-columns: 30px 44px 1fr auto; gap: 8px; padding: 2.5px 0; color: color-mix(in srgb, var(--fg) 72%, transparent); white-space: nowrap; }
+  .feed li { display: grid; grid-template-columns: 30px 52px 1fr auto; gap: 8px; padding: 2.5px 0; color: color-mix(in srgb, var(--fg) 72%, transparent); white-space: nowrap; }
   .feed li:first-child { color: var(--fg); }
   .feed time { color: var(--faint); font-variant-numeric: tabular-nums; }
   .feed .code { color: var(--faint); letter-spacing: 0.08em; overflow: hidden; }
+  .feed span.msg { overflow: hidden; }
   .feed li.warn .code, .feed li.warn span.msg { color: var(--accent); }
   .feed .sev { font-size: 7px; letter-spacing: 0.14em; border: var(--line-w) solid var(--line); padding: 0 3px; color: var(--faint); }
   .feed li.warn .sev { border-color: rgba(var(--accent-rgb), 0.5); color: var(--accent); }
@@ -94,6 +95,7 @@
   #vessels tr.on td:first-child { color: var(--accent); }
   #vessels td.st-wait { color: var(--faint); }
   #vessels td.st-go { color: var(--fg); }
+  #vessels td.name { max-width: 88px; overflow: hidden; text-overflow: ellipsis; }
 
   /* status + log + wind */
   .status .body { display: grid; grid-template-columns: 76px 1fr; gap: 10px; }
@@ -119,10 +121,11 @@
         <path d="M14 6 L14 18 M10 10 L14 6 L18 10"/>
         <path d="M6 4 L10 4 M6 4 L6 8" stroke-dasharray="1 2"/>
       </svg>
-      <div><b id="brand-name">STRAIT WATCH</b><small id="brand-sub">CHOKEPOINT MONITOR</small></div>
+      <div><b id="brand-name" data-en="STRAIT WATCH">海峡守望</b><small id="brand-sub" data-en="CHOKEPOINT MONITOR">咽喉要道监控</small></div>
     </div>
     <div class="ticker" id="ticker"><span></span><span></span><span></span></div>
     <div class="pages" id="site-nav"><a href="index.html">CONSOLE</a><a href="lab.html">LAB</a></div>
+    <div class="pages" id="lang-nav"></div>
     <div class="pages" id="scheme-nav"></div>
     <div class="clock">
       <div class="legend" id="legend"></div>
@@ -132,34 +135,34 @@
 
   <aside class="col left">
     <section class="panel menu-panel">
-      <header><span class="tag">S</span><span class="p-title">STRAIT</span><small class="p-note" id="strait-note">NORTHBOUND</small></header>
+      <header><span class="tag">S</span><span class="p-title" data-en="STRAIT">海峡</span><small class="p-note" id="strait-note" data-en="NORTHBOUND">北向</small></header>
       <div class="body">
-        <div class="menu-title">[STRAIT]<small id="menu-alert-dot"></small></div>
-        <div class="menu-row" data-menu="queue">QUEUE<b id="menu-queue">–</b></div>
-        <div class="menu-row on" data-menu="vessels">VESSELS<b id="menu-vessels">–</b></div>
-        <div class="menu-row" data-menu="alerts">ALERTS<b id="menu-alerts">0</b></div>
-        <div class="menu-row" data-menu="replay">REPLAY<b>24H</b></div>
-        <div class="layers-label">LAYERS</div>
-        <div class="menu-row checked" data-layer="tracks"><span class="box"></span>TRACKS</div>
-        <div class="menu-row checked" data-layer="anchorage"><span class="box"></span>ANCHORAGE</div>
-        <div class="menu-row" data-layer="aisdark"><span class="box"></span>AIS-DARK</div>
-        <div class="menu-row" data-layer="bathymetry"><span class="box"></span>BATHYMETRY</div>
-        <div class="menu-row" data-layer="weather"><span class="box"></span>WEATHER</div>
+        <div class="menu-title">[海峡]<small id="menu-alert-dot"></small></div>
+        <div class="menu-row" data-menu="queue"><span data-en="QUEUE">队列</span><b id="menu-queue">–</b></div>
+        <div class="menu-row on" data-menu="vessels"><span data-en="VESSELS">船只</span><b id="menu-vessels">–</b></div>
+        <div class="menu-row" data-menu="alerts"><span data-en="ALERTS">警报</span><b id="menu-alerts">0</b></div>
+        <div class="menu-row" data-menu="replay"><span data-en="REPLAY">回放</span><b>24H</b></div>
+        <div class="layers-label" data-en="LAYERS">图层</div>
+        <div class="menu-row checked" data-layer="tracks"><span class="box"></span><span data-en="TRACKS">航迹</span></div>
+        <div class="menu-row checked" data-layer="anchorage"><span class="box"></span><span data-en="ANCHORAGE">锚地</span></div>
+        <div class="menu-row" data-layer="aisdark"><span class="box"></span><span data-en="AIS-DARK">AIS 静默</span></div>
+        <div class="menu-row" data-layer="bathymetry"><span class="box"></span><span data-en="BATHYMETRY">水深</span></div>
+        <div class="menu-row" data-layer="weather"><span class="box"></span><span data-en="WEATHER">气象</span></div>
       </div>
     </section>
 
     <section class="panel vessels" style="flex: 1.5">
-      <header><span class="tag">V</span><span class="p-title">VESSELS</span><small class="p-note" id="vessels-note"></small></header>
+      <header><span class="tag">V</span><span class="p-title" data-en="VESSELS">船只</span><small class="p-note" id="vessels-note"></small></header>
       <div class="body">
         <table>
-          <thead><tr><th>NAME</th><th>FLAG</th><th class="num">SPD</th><th class="num">ST</th></tr></thead>
+          <thead><tr><th data-en="NAME">船名</th><th data-en="FLAG">船旗</th><th class="num" data-en="SPD">航速</th><th class="num" data-en="ST">状态</th></tr></thead>
           <tbody id="vessels"></tbody>
         </table>
       </div>
     </section>
 
     <section class="panel">
-      <header><span class="tag">T</span><span class="p-title">TRANSIT COUNT</span><small class="p-note">24H</small></header>
+      <header><span class="tag">T</span><span class="p-title" data-en="TRANSIT COUNT">通行量</span><small class="p-note">24H</small></header>
       <div class="body"><canvas id="count"></canvas></div>
     </section>
   </aside>
@@ -167,15 +170,15 @@
   <main class="center">
     <section class="panel viewport">
       <canvas id="map"></canvas>
-      <header><span class="tag">01</span><span class="p-title" id="vp-title">CHOKEPOINT WATCH</span><small class="p-note" id="vp-note"></small></header>
-      <div class="hint">CLICK VESSEL · INSPECT &nbsp;&nbsp; CLICK LAYER · TOGGLE</div>
-      <div class="seal" id="map-seal"></div>
+      <header><span class="tag">01</span><span class="p-title" id="vp-title" data-en="CHOKEPOINT WATCH">咽喉要道监控</span><small class="p-note" id="vp-note"></small></header>
+      <div class="hint" data-en="CLICK VESSEL · INSPECT   CLICK LAYER · TOGGLE">点击船只 · 检视　　点击图层 · 切换</div>
+      <div class="seal" id="map-seal" data-en="GRID WGS-84 · CHART 2425 · NOT FOR NAVIGATION">网格 WGS-84 · 海图 2425 · 非航行用途</div>
     </section>
   </main>
 
   <aside class="col right">
     <section class="panel status">
-      <header><span class="tag">E</span><span class="p-title">ENVIRONMENT</span><small class="p-note" id="env-note">LIVE</small></header>
+      <header><span class="tag">E</span><span class="p-title" data-en="ENVIRONMENT">环境</span><small class="p-note" id="env-note" data-en="LIVE">实时</small></header>
       <div class="body">
         <div class="dial"><canvas id="wind-dial"></canvas></div>
         <div class="kpis" id="env-kpis" style="grid-template-columns: 1fr 1fr"></div>
@@ -183,24 +186,24 @@
     </section>
 
     <section class="panel" style="flex: 1.2">
-      <header><span class="tag">W</span><span class="p-title">SURVEILLANCE</span><small class="p-note" id="radar-note"></small></header>
+      <header><span class="tag">W</span><span class="p-title" data-en="SURVEILLANCE">监视</span><small class="p-note" id="radar-note"></small></header>
       <div class="body"><canvas id="radar"></canvas></div>
     </section>
 
     <section class="panel log-panel">
-      <header><span class="tag">L</span><span class="p-title">EVENT LOG</span><small class="p-note">LIVE</small></header>
+      <header><span class="tag">L</span><span class="p-title" data-en="EVENT LOG">事件日志</span><small class="p-note" data-en="LIVE">实时</small></header>
       <div class="body"><ul id="log"></ul></div>
     </section>
   </aside>
 
   <div class="bottomstrip">
     <section class="panel">
-      <header><span class="tag">A</span><span class="p-title">TRANSIT</span><small class="p-note" id="transit-note"></small></header>
+      <header><span class="tag">A</span><span class="p-title" data-en="TRANSIT">通行</span><small class="p-note" id="transit-note"></small></header>
       <div class="body"><canvas id="transit"></canvas></div>
     </section>
 
     <section class="panel inspector">
-      <header><span class="tag">B</span><span class="p-title">TARGET INSPECTOR</span><small class="p-note" id="inspector-note"></small></header>
+      <header><span class="tag">B</span><span class="p-title" data-en="TARGET INSPECTOR">目标检视</span><small class="p-note" id="inspector-note"></small></header>
       <div class="body">
         <div class="hull-wrap"><canvas class="hull" id="hull"></canvas></div>
         <dl class="kv" id="inspector"></dl>
@@ -208,20 +211,20 @@
     </section>
 
     <section class="panel">
-      <header><span class="tag">C</span><span class="p-title">TRANSIT QUEUE</span><small class="p-note">GATE S</small></header>
+      <header><span class="tag">C</span><span class="p-title" data-en="TRANSIT QUEUE">通行队列</span><small class="p-note" data-en="GATE S">南门</small></header>
       <div class="body">
         <div class="queue-kpis">
-          <div><b id="q-wait">–</b><small>WAIT</small></div>
-          <div><b id="q-dwell">–</b><small>DWELL</small></div>
-          <div><b id="q-clear">–</b><small>CLEAR</small></div>
-          <div class="acc"><b id="q-delta">–</b><small>DELTA</small></div>
+          <div><b id="q-wait">–</b><small data-en="WAIT">等待</small></div>
+          <div><b id="q-dwell">–</b><small data-en="DWELL">滞留</small></div>
+          <div><b id="q-clear">–</b><small data-en="CLEAR">通行</small></div>
+          <div class="acc"><b id="q-delta">–</b><small data-en="DELTA">增量</small></div>
         </div>
         <canvas id="queue-spark"></canvas>
       </div>
     </section>
 
     <section class="panel">
-      <header><span class="tag">D</span><span class="p-title">ALERT FEED</span><small class="p-note" id="feed-note">3 ACTIVE</small></header>
+      <header><span class="tag">D</span><span class="p-title" data-en="ALERT FEED">警报流</span><small class="p-note" id="feed-note"></small></header>
       <div class="body"><ul class="feed" id="feed"></ul></div>
     </section>
   </div>

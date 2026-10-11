@@ -3,17 +3,20 @@
 // visual language (paper/ink light scheme, dot-cloud terrain, hairlines, brackets)
 // carrying a completely different business model. All colours flow through
 // palette.js; no hardcoded white/black; zero business meaning in the core layer.
+// Bilingual like lab/components: ?lang=zh|en, localStorage, auto-detect.
 
 import { fitCanvas } from "../core/glkit.js";
 import { rng, hash, makeNoise, fbmFactory, clamp, lerp, groupDigits } from "../core/util.js";
-import { pal, refreshPalette, ink, ac, fgStr, acStr, bgStr } from "../core/palette.js";
+import { refreshPalette, ink, acStr, bgStr } from "../core/palette.js";
 import { startChrome, scramble } from "../core/chrome.js";
 import { startSparks } from "../core/sparks.js";
+import { initLang, onLang, t as tt } from "../core/i18n.js";
 import { surface, dotBuckets, label, FONT } from "./panels2d.js";
 
 const $ = (id) => document.getElementById(id);
 const NM = 17;                      // strait length, nautical miles
 const GATE_S = 0.06, GATE_N = 0.94; // gate positions along the channel (u)
+const SPEED_UP = 900;               // time compression: 1s wall ≈ 15 min watch time
 
 // ---------------------------------------------------------------- data model
 const NAMES = [
@@ -27,7 +30,6 @@ const TYPES = [
   ["LNG CARRIER", "LNG"], ["PRODUCT TANKER", "FUEL OIL"], ["RORO", "VEHICLES"],
   ["CONTAINER", "CONTAINERS"], ["GENERAL CARGO", "STEEL COILS"], ["CHEM TANKER", "CHEMICALS"],
 ];
-const GREEK = "ABΓΔEZHΘIKΛMNΞOΠPΣTΥΦXΨΩ";
 
 const rand = rng(20261012);
 const pick = (l) => l[Math.floor(rand() * l.length)];
@@ -46,6 +48,7 @@ function makeVessel() {
     score: Math.round(58 + rand() * 41),         // 58..99
     state: "WAIT",                               // WAIT | TRANSIT
     u: 0.14, dwell: 1 + rand() * 5,              // h at anchorage
+    waited: 0,                                   // h actually waited (for the log)
     phase: rand() * Math.PI * 2,
     trail: [],
     hdg: 11,
@@ -58,6 +61,7 @@ for (let i = 0; i < 12; i++) {
   if (i < 5) { // anchored at V-12, staggered dwell
     v.slot = i;
     v.dwell = 0.3 + i * 0.9 + rand() * 1.5;
+    v.waited = v.dwell;
   } else {
     v.state = "TRANSIT";
     v.u = 0.2 + (i - 5) * 0.105 + rand() * 0.04;
@@ -108,11 +112,11 @@ function channelAt(px, py) {
 
 function posAt(u) {
   const f = clamp(u, 0, 1) * (S.length - 1);
-  const i = Math.floor(f), t = f - i;
+  const i = Math.floor(f), t2 = f - i;
   const a = S[i], b = S[Math.min(S.length - 1, i + 1)];
   return {
-    x: lerp(a.x, b.x, t), y: lerp(a.y, b.y, t),
-    tx: lerp(a.tx, b.tx, t), ty: lerp(a.ty, b.ty, t), hw: lerp(a.hw, b.hw, t),
+    x: lerp(a.x, b.x, t2), y: lerp(a.y, b.y, t2),
+    tx: lerp(a.tx, b.tx, t2), ty: lerp(a.ty, b.ty, t2), hw: lerp(a.hw, b.hw, t2),
   };
 }
 
@@ -169,7 +173,7 @@ function renderStatic() {
     for (let k = 0; k < 7; k++) {
       const u = 0.08 + sndRand() * 0.84, p = posAt(u);
       const off = (sndRand() - 0.5) * p.hw;
-      label(ctx, `${Math.round(12 + sndRand() * 52)} M`, p.x + off, p.y, "center", ink(0.4));
+      label(ctx, `${Math.round(12 + sndRand() * 52)} ${tt("米", "M")}`, p.x + off, p.y, "center", ink(0.4));
     }
   }
 
@@ -191,7 +195,7 @@ function renderStatic() {
 
   // anchorage bays
   if (layers.anchorage) {
-    for (const [u, name] of [[0.14, "V-12 ANCHORAGE"], [0.86, "V-15 ANCHORAGE"]]) {
+    for (const [u, name] of [[0.14, `V-12 ${tt("锚地", "ANCHORAGE")}`], [0.86, `V-15 ${tt("锚地", "ANCHORAGE")}`]]) {
       const p = posAt(u);
       ctx.strokeStyle = ink(0.35);
       ctx.setLineDash([3, 4]);
@@ -204,7 +208,7 @@ function renderStatic() {
 
   // compass north + bearing ruler (chart furniture)
   const nx0 = w * 0.515, ny0 = 30;
-  label(ctx, "N", nx0, ny0, "center", ink(0.7));
+  label(ctx, tt("北", "N"), nx0, ny0, "center", ink(0.7));
   ctx.strokeStyle = ink(0.5);
   ctx.beginPath(); ctx.moveTo(nx0, ny0 + 8); ctx.lineTo(nx0, ny0 + 16); ctx.stroke();
   const rx = w * 0.44, rw = w * 0.18, ry = h - 26;
@@ -215,7 +219,7 @@ function renderStatic() {
     ctx.moveTo(x, ry); ctx.lineTo(x, ry - (tall ? 9 : 5));
   }
   ctx.stroke();
-  ["35", "00", "01", "02", "03"].forEach((t, k) => label(ctx, t, rx + (k / 4) * rw, ry + 8, "center", ink(0.45)));
+  ["35", "00", "01", "02", "03"].forEach((tx, k) => label(ctx, tx, rx + (k / 4) * rw, ry + 8, "center", ink(0.45)));
   label(ctx, "011°T", rx + rw / 2, ry - 16, "center", ink(0.6));
   ctx.beginPath(); ctx.moveTo(rx + rw / 2, ry - 12); ctx.lineTo(rx + rw / 2, ry - 6); ctx.stroke();
 }
@@ -295,10 +299,10 @@ function mapFrame(ctx, w, h, t, dt) {
   if (!staticLayer) return;
   ctx.drawImage(staticLayer, 0, 0, w, h);
 
-  // wind streaks
+  // wind streaks (toward where the wind blows: FROM windDir -> toward +180°)
   if (layers.weather) {
-    const a = ((windDir + 180) % 360) * Math.PI / 180; // toward SW
-    const vx = Math.cos(a), vy = Math.sin(a);
+    const a = (windDir * Math.PI) / 180;
+    const vx = -Math.cos(a), vy = Math.sin(a);
     ctx.strokeStyle = ink(0.22);
     ctx.lineWidth = 1;
     ctx.beginPath();
@@ -366,7 +370,9 @@ function mapFrame(ctx, w, h, t, dt) {
     const tx = v.px + R + 20, ty = v.py - R - 6;
     ctx.font = `7.5px ${FONT}`;
     label(ctx, v.name, tx, ty, "left", `rgba(${acStr()},0.95)`);
-    label(ctx, `${v.state === "WAIT" ? "AT ANCHOR" : v.speed.toFixed(1) + " KN"} · HDG ${String(v.hdg).padStart(3, "0")}°`, tx, ty + 9, "left", ink(0.6));
+    label(ctx, v.state === "WAIT"
+      ? `${tt("锚泊", "AT ANCHOR")} · HDG ${String(v.hdg).padStart(3, "0")}°`
+      : `${v.speed.toFixed(1)} ${tt("节", "KN")} · HDG ${String(v.hdg).padStart(3, "0")}°`, tx, ty + 9, "left", ink(0.6));
     ctx.strokeStyle = `rgba(${acStr()},0.5)`;
     ctx.beginPath(); ctx.moveTo(v.px + R * 0.7, v.py - R * 0.7); ctx.lineTo(tx - 3, ty + 3); ctx.stroke();
   }
@@ -398,18 +404,21 @@ function stepSim(dt, dtH, t) {
       }
       if (v.u >= 1) { // cleared — respawn as a fresh arrival at V-12
         clearedCount++;
-        logLine(`${v.name} CLEARED N-GATE · DWELL ${(v.dwell + (1 - v.u0 || 0)).toFixed(1)}H`);
-        Object.assign(v, makeVessel(), { state: "WAIT", u: 0.14, slot: Math.floor(rand() * 5), dwell: 1 + rand() * 5 });
+        logLine(tt(`${v.name} 通过北门 · 滞留 ${v.waited.toFixed(1)} 小时`,
+          `${v.name} CLEARED N-GATE · DWELL ${v.waited.toFixed(1)}H`));
+        const nv = makeVessel();
+        nv.dwell = 1 + rand() * 5; nv.waited = nv.dwell;
+        Object.assign(v, nv, { state: "WAIT", u: 0.14, slot: Math.floor(rand() * 5) });
         syncTable();
       }
     } else {
       v.dwell -= dtH;
+      v.waited += dtH;
       if (v.dwell <= 0) {
         v.state = "TRANSIT";
         v.u = 0.14;
-        v.u0 = v.u;
         v.trail.length = 0;
-        logLine(`V-12 RELEASED ${v.name} · NORTHBOUND`);
+        logLine(tt(`V-12 放行 ${v.name} · 北向`, `V-12 RELEASED ${v.name} · NORTHBOUND`));
       }
     }
   }
@@ -422,7 +431,7 @@ function syncTable() {
     <tr data-id="${v.id}" class="${v === selected ? "on" : ""}">
       <td class="name">${v.name}</td><td>${v.flag}</td>
       <td class="num">${v.state === "WAIT" ? "–" : v.speed.toFixed(1)}</td>
-      <td class="num st-${v.state === "WAIT" ? "wait" : "go"}">${v.state === "WAIT" ? "ANC" : "TRN"}</td>
+      <td class="num st-${v.state === "WAIT" ? "wait" : "go"}">${v.state === "WAIT" ? tt("锚", "ANC") : tt("航", "TRN")}</td>
     </tr>`).join("");
   for (const tr of $("vessels").rows) {
     tr.addEventListener("click", () => {
@@ -433,30 +442,34 @@ function syncTable() {
   const waiting = vessels.filter((v) => v.state === "WAIT").length;
   $("menu-queue").textContent = waiting;
   $("menu-vessels").textContent = vessels.length;
-  $("vessels-note").textContent = `${waiting} AT ANCHOR`;
-  $("vp-note").textContent = `BOSPHORUS · NORTHBOUND · ${vessels.length} VESSELS`;
+  $("vessels-note").textContent = tt(`${waiting} 艘锚泊`, `${waiting} AT ANCHOR`);
+  $("vp-note").textContent = tt(`博斯普鲁斯 · 北向 · ${vessels.length} 艘`, `BOSPHORUS · NORTHBOUND · ${vessels.length} VESSELS`);
 }
 
 // ---------------------------------------------------------------- alert feed
 const feedEl = $("feed");
-const feedItems = []; // { el, t, warn, crit }
-const ALERT_TPL = [
-  ["AIS GAP", (v) => `${v.name} · ${1 + Math.floor(Math.random() * 6)} MIN`, "warn"],
-  ["SPEED DROP", (v) => `${v.name} · −${(1 + Math.random() * 3).toFixed(1)} KN`, "warn"],
-  ["OFF-LANE", (v) => `${v.name} · ${(0.1 + Math.random() * 0.4).toFixed(1)} NM`, "crit"],
-  ["UKC LOW", (v) => `${v.name} · ${(0.8 + Math.random() * 1.4).toFixed(1)} M`, "crit"],
-  ["QUEUE +2", () => `N-GATE · CONVOY FORMING`, "warn"],
-  ["AIS SIGNAL", (v) => `${v.name} · RESTORED`, ""],
-];
+const feedItems = []; // { el, t, warn }
+// rebuilt per push: message closures draw unit labels in the active language
+function alertTpl() {
+  return [
+    [tt("AIS 中断", "AIS GAP"), (v) => tt(`${v.name} · ${1 + Math.floor(Math.random() * 6)} 分钟`, `${v.name} · ${1 + Math.floor(Math.random() * 6)} MIN`), "warn"],
+    [tt("减速", "SPEED DROP"), (v) => tt(`${v.name} · 降 ${(1 + Math.random() * 3).toFixed(1)} 节`, `${v.name} · −${(1 + Math.random() * 3).toFixed(1)} KN`), "warn"],
+    [tt("偏航", "OFF-LANE"), (v) => tt(`${v.name} · 偏 ${(0.1 + Math.random() * 0.4).toFixed(1)} 海里`, `${v.name} · ${(0.1 + Math.random() * 0.4).toFixed(1)} NM`), "crit"],
+    [tt("富余水深不足", "UKC LOW"), (v) => tt(`${v.name} · 余 ${(0.8 + Math.random() * 1.4).toFixed(1)} 米`, `${v.name} · ${(0.8 + Math.random() * 1.4).toFixed(1)} M`), "crit"],
+    [tt("队列 +2", "QUEUE +2"), () => tt("南门 · 正在编队", "S-GATE · CONVOY FORMING"), "warn"],
+    [tt("AIS 信号", "AIS SIGNAL"), (v) => tt(`${v.name} · 已恢复`, `${v.name} · RESTORED`), ""],
+  ];
+}
 let nextAlert = 4;
 
 function pushAlert(t, ageSec = 0) {
-  const [code, fmt, sev] = ALERT_TPL[Math.floor(Math.random() * ALERT_TPL.length)];
+  const TPL = alertTpl();
+  const [code, fmt, sev] = TPL[Math.floor(Math.random() * TPL.length)];
   const v = vessels[Math.floor(Math.random() * vessels.length)];
   const li = document.createElement("li");
   if (sev) li.classList.add(sev === "crit" ? "crit" : "warn");
   const now = new Date(Date.now() - ageSec * 1000);
-  li.innerHTML = `<time>${now.toISOString().slice(11, 19)}</time><span class="code">${code}</span><span class="msg"></span><span class="sev">${sev ? sev.toUpperCase() : "INFO"}</span>`;
+  li.innerHTML = `<time>${now.toISOString().slice(11, 19)}</time><span class="code">${code}</span><span class="msg"></span><span class="sev">${sev ? (sev === "crit" ? tt("严重", "CRIT") : tt("警告", "WARN")) : tt("提示", "INFO")}</span>`;
   feedEl.prepend(li);
   feedItems.push({ el: li, t: t - ageSec, warn: !!sev });
   while (feedItems.length > 9) { feedItems.shift().el.remove(); }
@@ -519,7 +532,7 @@ function transitFrame(ctx, w, h, t) {
       ctx.fillStyle = isSel ? `rgb(${acStr()})` : ink(0.95);
       ctx.fillRect(x - 2, y - 2, 4, 4);
     }
-    label(ctx, v.state === "WAIT" ? "ANC" : `${Math.round(v.u * 100)}%`, right + 6, y, "left", ink(0.4));
+    label(ctx, v.state === "WAIT" ? tt("锚", "ANC") : `${Math.round(v.u * 100)}%`, right + 6, y, "left", ink(0.4));
   });
 }
 
@@ -541,7 +554,7 @@ function hullFrame(ctx, w, h, t) {
   ctx.lineDashOffset = -t * 8;
   ctx.beginPath(); ctx.moveTo(pad, wl); ctx.lineTo(w - pad, wl); ctx.stroke();
   ctx.setLineDash([]);
-  label(ctx, "DRAFT " + v.draft + " M", w - pad, wl + 7, "right", ink(0.4));
+  label(ctx, `${tt("吃水", "DRAFT")} ${v.draft} ${tt("米", "M")}`, w - pad, wl + 7, "right", ink(0.4));
 
   ctx.save();
   ctx.translate(0, bob);
@@ -571,7 +584,7 @@ function hullFrame(ctx, w, h, t) {
     ctx.fillStyle = `rgba(${acStr()},0.8)`;
     ctx.fillRect(stX + loaPx * 0.39, sheerTop - 5, loaPx * 0.05, 5);
   }
-  // bridge aft
+  // bridge block aft
   ctx.fillStyle = ink(0.8);
   ctx.fillRect(stX + loaPx * 0.03, sheerTop - 8, loaPx * 0.07, 8);
   ctx.restore();
@@ -582,7 +595,7 @@ function hullFrame(ctx, w, h, t) {
   ctx.beginPath();
   ctx.moveTo(stX, dy + 4); ctx.lineTo(stX, dy); ctx.lineTo(bowX, dy); ctx.lineTo(bowX, dy + 4);
   ctx.stroke();
-  label(ctx, `LOA ${v.loa} M`, (stX + bowX) / 2, dy + 7, "center", ink(0.55));
+  label(ctx, `${tt("船长", "LOA")} ${v.loa} ${tt("米", "M")}`, (stX + bowX) / 2, dy + 7, "center", ink(0.55));
 }
 
 const INSPECTOR_FIELDS = ["VESSEL", "IMO", "FLAG", "TYPE", "CARGO", "DRAFT", "SPEED", "HDG", "ETA", "SCORE"];
@@ -592,16 +605,19 @@ function syncInspector() {
   const eta = new Date(Date.now() + etaH * 3600e3).toISOString().slice(11, 16);
   const vals = {
     VESSEL: v.name, IMO: v.imo, FLAG: v.flag, TYPE: v.type, CARGO: v.cargo,
-    DRAFT: `${v.draft} M`, SPEED: v.state === "WAIT" ? "0.0 KN" : `${v.speed.toFixed(1)} KN`,
+    DRAFT: `${v.draft} ${tt("米", "M")}`,
+    SPEED: v.state === "WAIT" ? `0.0 ${tt("节", "KN")}` : `${v.speed.toFixed(1)} ${tt("节", "KN")}`,
     HDG: v.state === "WAIT" ? "—" : `${String(v.hdg).padStart(3, "0")}°T`,
-    ETA: v.state === "WAIT" ? `RELEASE ${eta}` : `N-GATE ${eta}`,
+    ETA: v.state === "WAIT" ? tt(`放行 ${eta}`, `RELEASE ${eta}`) : tt(`北门 ${eta}`, `N-GATE ${eta}`),
     SCORE: `${v.score} / 100`,
   };
   $("inspector").innerHTML = INSPECTOR_FIELDS.map((k) => {
     const cls = k === "SCORE" ? (v.score >= 75 ? ' class="acc"' : ' class="score-bad"') : "";
     return `<dt>${k}</dt><dd${cls}>${vals[k]}</dd>`;
   }).join("");
-  $("inspector-note").textContent = v.state === "WAIT" ? "AT ANCHOR · V-12" : `TRACKING · ${(v.u * NM).toFixed(1)} NM IN`;
+  $("inspector-note").textContent = v.state === "WAIT"
+    ? tt("锚泊 · V-12", "AT ANCHOR · V-12")
+    : tt(`追踪中 · 入峡 ${(v.u * NM).toFixed(1)} 海里`, `TRACKING · ${(v.u * NM).toFixed(1)} NM IN`);
 }
 
 // TRANSIT QUEUE: KPIs + sparkline
@@ -619,7 +635,7 @@ function queueFrame(ctx, w, h, t) {
     if (x < left) return;
     ctx.fillRect(x, y, 1.6, 1.6);
   });
-  label(ctx, "QUEUE / 2 MIN", left, top - 3, "left", ink(0.4));
+  label(ctx, tt("队列 / 2 分钟", "QUEUE / 2 MIN"), left, top - 3, "left", ink(0.4));
 }
 
 // ENVIRONMENT dial + KPIs
@@ -647,17 +663,30 @@ function windFrame(ctx, w, h, t) {
   ctx.lineTo(cx + Math.cos(a - 2.6) * 5, cy - Math.sin(a - 2.6) * 5);
   ctx.fill();
   ctx.lineWidth = 1;
-  label(ctx, "N", cx, cy - R - 1, "center", ink(0.55));
+  label(ctx, tt("北", "N"), cx, cy - R - 1, "center", ink(0.55));
   label(ctx, windSpd.toFixed(1), cx, cy - 3, "center", ink(0.95));
   ctx.font = `6.5px ${FONT}`;
-  label(ctx, "M/S", cx, cy + 5, "center", ink(0.45));
+  label(ctx, tt("米/秒", "M/S"), cx, cy + 5, "center", ink(0.45));
   ctx.font = `8px ${FONT}`;
+}
+
+// ENVIRONMENT KPI cells (populated here, refreshed by the slow-UI tick)
+const ENV_DEFS = [
+  ["VIS", () => `${(9 + Math.random() * 4).toFixed(1)} ${tt("海里", "NM")}`],
+  ["WIND", () => `${(windSpd + Math.random() * 1.6 - 0.8).toFixed(1)} M/S`],
+  ["CURRENT", () => `${(1.6 + Math.random() * 0.9).toFixed(1)} ${tt("节", "KN")} ↓`],
+  ["VHF", () => "CH-16"],
+  ["UKC", () => `${(1.4 + Math.random() * 0.8).toFixed(1)} ${tt("米", "M")}`],
+  ["SWELL", () => `${(0.3 + Math.random() * 0.5).toFixed(1)} ${tt("米", "M")}`],
+];
+function buildEnvKpis() {
+  $("env-kpis").innerHTML = ENV_DEFS.map(([k]) => `<div><small>${k}</small><b id="env-${k.toLowerCase()}">—</b></div>`).join("");
 }
 
 // SURVEILLANCE: AIS sweep radar with fading blips
 const radarBegin = surface($("radar"));
 let sweep = 0;
-const blips = new Map(); // vessel id -> {a, r, ttl}
+const blips = new Map(); // vessel id -> {x, y, ttl}
 function radarFrame(ctx, w, h, t, dt) {
   const cx = w / 2, cy = h / 2, R = Math.min(w, h) / 2 - 8;
   ctx.strokeStyle = ink(0.18);
@@ -706,26 +735,49 @@ function countFrame(ctx, w, h, t) {
   });
   // today accumulator (growing bar at current hour)
   const hr = new Date().getUTCHours();
-  const today = Math.round(clearedCount + (hr / 24) * 8);
+  const todayTotal = clearedCount + Math.round((hr / 24) * 12);
   const x = left + hr * col;
-  const bars = Math.min(Math.round((base - top) / 3), Math.round(((today + clearedCount) / max) * (base - top) / 3) + 2);
+  const bars = Math.min(Math.round((base - top) / 3), Math.round((todayTotal / max) * (base - top) / 3) + 2);
   ctx.fillStyle = `rgba(${acStr()},0.85)`;
   for (let j = 0; j < bars; j++) ctx.fillRect(x, base - j * 3, Math.max(1, col - 2), 1.6);
-  label(ctx, "TODAY " + groupDigits(clearedCount + today), right, top, "right", `rgba(${acStr()},0.9)`);
+  label(ctx, `${tt("今日", "TODAY")} ${groupDigits(todayTotal)}`, right, top, "right", `rgba(${acStr()},0.9)`);
   label(ctx, "0H", left, h - 4, "left", ink(0.35));
   label(ctx, "12H", left + 12 * col, h - 4, "center", ink(0.35));
   label(ctx, "24H", right, h - 4, "right", ink(0.35));
 }
 
 // ---------------------------------------------------------------- chrome / sparks / scheme
+initLang($("lang-nav"));
+
+// chrome.scramble replaces unsettled chars with ASCII glyphs — CJK values would
+// flash as garbage, so text containing Han characters settles instantly.
+const CJK = /[㐀-鿿]/;
+function setVal(el, text) {
+  if (CJK.test(text)) { el.dataset.target = text; el.textContent = text; }
+  else scramble(el, text);
+}
+
 const fakeTheme = {
-  chrome: { codes: ["VTS", "PILOT", "TSS", "AIS", "UKC", "GATE", "CONVOY"], copyright: "© STRAIT WATCH" },
-  tag: "CHOKEPOINT WATCH",
+  chrome: { codes: ["VTS", "PILOT", "TSS", "AIS", "UKC", "GATE", "CONVOY"], copyright: tt("© 海峡守望", "© STRAIT WATCH") },
+  tag: tt("咽喉要道监控", "CHOKEPOINT WATCH"),
 };
+function renderLegendFooter() {
+  $("legend").innerHTML = [
+    [false, tt("在航", "TRANSIT")], [true, tt("锚泊", "ANCHOR")],
+    [false, tt("航迹", "TRACK")], [true, tt("警报", "ALERT")],
+  ].map(([accent, text]) => `<span><i class="${accent ? "accent" : ""}"></i>${text}</span>`).join("");
+  $("footer").innerHTML = `<strong class="copy">${fakeTheme.chrome.copyright}</strong>` + [
+    ["S-GATE", tt("开放", "OPEN")], ["V-12", `5 ${tt("锚", "ANC")}`], ["N-GATE", tt("开放", "OPEN")],
+    ["TSS", tt("分道通航", "2-WAY")], ["AIS", tt("12 目标", "12 TRACKS")], ["UKC", tt("正常", "OK")], ["VHF", "16"],
+  ].map(([key, value], i) =>
+    `<span><i class="${i % 7 === 3 ? "accent" : ""}"></i>${key} <b>${value}</b></span>`).join("")
+    + `<em>${fakeTheme.tag} / ${new Date().toISOString().slice(0, 10)}</em>`;
+}
 const chrome = startChrome(fakeTheme, {
   legend: [[false, "TRANSIT"], [true, "ANCHOR"], [false, "TRACK"], [true, "ALERT"]],
-  footer: [["S-GATE", "OPEN"], ["V-12", "5 ANC"], ["N-GATE", "OPEN"], ["TSS", "2WAY"], ["AIS", "12 TRK"], ["UKC", "OK"], ["VHF", "16"]],
+  footer: [["S-GATE", "OPEN"], ["V-12", "5 ANC"], ["N-GATE", "OPEN"], ["TSS", "2-WAY"], ["AIS", "12 TRK"], ["UKC", "OK"], ["VHF", "16"]],
 });
+renderLegendFooter();
 
 let sparks = null;
 function restartSparks() {
@@ -756,8 +808,19 @@ function setScheme(s) {
   syncSchemeButtons();
   refreshPalette();
   staticKey = "";       // force static layer rebuild with the new ink
-  restartSparks();
+  restartSparks();      // spark palette is snapshotted at startSparks
 }
+
+// language switch: rebuild every text we own (static layer holds baked labels)
+onLang(() => {
+  fakeTheme.chrome.copyright = tt("© 海峡守望", "© STRAIT WATCH");
+  fakeTheme.tag = tt("咽喉要道监控", "CHOKEPOINT WATCH");
+  renderLegendFooter();
+  staticKey = "";
+  syncTable();
+  syncInspector();
+  buildEnvKpis();
+});
 
 // URL params: ?scheme= ?accent= (same contract as index.html)
 {
@@ -777,9 +840,10 @@ document.documentElement.dataset.scheme = savedScheme;
 syncSchemeButtons();
 refreshPalette();
 restartSparks();
+buildEnvKpis();
+$("radar-note").textContent = tt("12 个目标", "12 TARGETS");
 
-$("map-seal").textContent = "GRID WGS-84 · CHART 2425 · NOT FOR NAVIGATION";
-logLine("WATCH OPENED · NORTHBOUND CONVOY ACTIVE");
+logLine(tt("值班开始 · 北向船队活跃中", "WATCH OPENED · NORTHBOUND CONVOY ACTIVE"));
 // boot with a few recent alerts on the feed, like a real watch handover
 pushAlert(0, 72); pushAlert(0, 44); pushAlert(0, 18);
 
@@ -788,12 +852,12 @@ let last = performance.now(), lastUi = 0, lastSpark = 0, lastCount = 0;
 function loop(now) {
   const t = now / 1000, dt = Math.min(0.05, (now - last) / 1000);
   last = now;
-  const dtH = dt / 3600 * 900; // 900x time compression: 1s wall ≈ 15 min watch time
+  const dtH = dt / 3600 * SPEED_UP;
 
   stepSim(dt, dtH, t);
 
-  // map (rebuild static layer on resize / scheme change)
-  const key = `${mapCanvas.width}x${mapCanvas.height}:${document.documentElement.dataset.scheme}`;
+  // map (rebuild static layer on resize / scheme / language change)
+  const key = `${mapCanvas.width}x${mapCanvas.height}:${document.documentElement.dataset.scheme}:${tt("zh", "en")}`;
   if (key !== staticKey) { staticKey = key; renderStatic(); }
   {
     const { ctx, w, h } = beginMap();
@@ -830,15 +894,19 @@ function loop(now) {
     const waiting = vessels.filter((v) => v.state === "WAIT");
     const transit = vessels.length - waiting.length;
     scramble($("q-wait"), String(waiting.length).padStart(2, "0"));
-    scramble($("q-dwell"), (waiting.reduce((s, v) => s + v.dwell, 0) / Math.max(1, waiting.length)).toFixed(1) + "H");
+    setVal($("q-dwell"), (waiting.reduce((s, v) => s + v.dwell, 0) / Math.max(1, waiting.length)).toFixed(1) + tt("时", "H"));
     scramble($("q-clear"), String(transit).padStart(2, "0"));
     scramble($("q-delta"), "+" + Math.max(0, waiting.length - 4));
+    for (const [k, fn] of ENV_DEFS) {
+      const el = $("env-" + k.toLowerCase());
+      if (el) setVal(el, fn());
+    }
     syncInspector();
     // active alerts = younger than 75s
     const active = feedItems.filter((f) => t - f.t < 75 && f.warn).length;
     scramble($("menu-alerts"), String(active));
     $("menu-alerts").parentElement.classList.toggle("hot", active > 0);
-    $("feed-note").textContent = `${active} ACTIVE`;
+    $("feed-note").textContent = tt(`${active} 条活跃`, `${active} ACTIVE`);
   }
   if (t - lastSpark > 2) {
     lastSpark = t;
@@ -847,7 +915,7 @@ function loop(now) {
   }
   if (t - lastCount > 7) {
     lastCount = t;
-    $("transit-note").textContent = `${vessels.filter((v) => v.state === "TRANSIT").length} IN TRANSIT`;
+    $("transit-note").textContent = tt(`${vessels.filter((v) => v.state === "TRANSIT").length} 艘在航`, `${vessels.filter((v) => v.state === "TRANSIT").length} IN TRANSIT`);
   }
   if (t > nextAlert) {
     nextAlert = t + 7 + Math.random() * 9;
