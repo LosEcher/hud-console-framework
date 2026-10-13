@@ -214,7 +214,7 @@ export function createGlobe(canvas, overlay, readout, { hub: HUB, links, seed = 
     ctx.stroke();
 
     // visible city markers
-    ctx.font = '8px "Plex", ui-monospace, monospace';
+    ctx.font = '9px "Plex", ui-monospace, monospace';
     ctx.textBaseline = "middle";
     cities.forEach((c, i) => {
       const p = project(mvp, c, w, h);
