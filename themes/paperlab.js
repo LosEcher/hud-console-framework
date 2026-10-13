@@ -1,76 +1,59 @@
-// Theme "paperlab" — flat grayscale "paper lab" language (from @mika_systems Paper Lab demo):
-// near-black luminance ladder, 1px hairlines, no gradient/glow/shadow, single desaturated
-// brick-red signal. Reuses the orbital world model; only the visual tokens differ.
-// Extra `css` tokens are applied by main.js and cleared on theme switch.
+// Theme "paperlab" — flat grayscale "paper lab" visual language (from @mika_systems Paper Lab demo):
+// solid luminance ladder, 1px hairlines, no gradient/glow/scanline/grain, single desaturated
+// brick-red signal. It has no world of its own: it reuses the orbital world (copy, terrain,
+// race data) and only replaces visual tokens, so orbital content is imported, not duplicated.
+// `tokens.css` / `tokens.cssLight` are applied by main.js for the active scheme and cleared on
+// every theme/scheme switch. All text levels are checked by `npm run contrast`.
+
+import orbital from "./orbital.js";
 
 export default {
+  ...orbital,
   id: "paperlab",
   tokens: {
     accent: "#c8746a", accentRgb: "200,116,106", bg: "#0c0c0c", bg2: "#0c0c0c",
-    lightAccent: "#9a4a40", lightAccentRgb: "154,74,64", accentUse: 0.6,
-    // dark-scheme-only overrides of base tokens (sampled from video frames; * = estimate)
+    lightAccent: "#8f4238", lightAccentRgb: "143,66,56",
+    // 1 = full-strength control accent; at 0.6 it dropped to ~2.4:1 (fails WCAG 1.4.11)
+    accentUse: 1,
+    // dark scheme: solid ladder. bg 0c → surface 17 → surface-2 20 → line 2e │ faint 90 → dim b0 → fg e6
+    // (colours sampled from video frames; faint/dim lifted so both pass 4.5:1 on surface-2)
     css: {
       "--fg": "#e6e6e6",
-      "--dim": "#8a8a8a",
-      "--faint": "#666666",
+      "--dim": "#b0b0b0",
+      "--faint": "#909090",
       "--line": "#2e2e2e",
       "--surface": "#171717",
       "--surface-2": "#202020",
       "--radius": "2px",
+      "--body-bg": "var(--bg)",
+      "--panel-bg": "var(--surface)",
+      "--bracket-color": "var(--line)",
+      "--scanline-opacity": "0",
+      "--grain-opacity": "0",
+    },
+    // light scheme: same structure on warm paper, ink ladder
+    cssLight: {
+      "--bg": "#f2f1ed",
+      "--bg2": "#f2f1ed",
+      "--fg": "#16161a",
+      "--dim": "#45433f",
+      "--faint": "#5f5d58",
+      "--line": "#c9c7c0",
+      "--surface": "#e9e8e3",
+      "--surface-2": "#dfddd7",
+      "--danger": "#a8322a",
+      "--danger-rgb": "168,50,42",
+      "--radius": "2px",
+      "--body-bg": "var(--bg)",
+      "--panel-bg": "var(--surface)",
+      "--bracket-color": "var(--line)",
+      "--scanline-opacity": "0",
+      "--grain-opacity": "0",
     },
   },
-  spark: { density: 0, ratio: 0, palette: ["200,116,106"], lightPalette: ["154,74,64"], speed: 0, cometEvery: 0, opacity: 0 },
+  spark: { density: 0, ratio: 0, palette: ["200,116,106"], lightPalette: ["143,66,56"], speed: 0, cometEvery: 0, opacity: 0 },
 
-  brand: { name: "PAPER LAB", sub: "GROUND STATION · K2 ARRAY · 2026" },
+  brand: { ...orbital.brand, name: "PAPER LAB" },
   tag: "hud-framework · flat grayscale",
-  chrome: { codes: ["ACQUIRE", "TRACK", "DOWNLINK", "STANDBY"], copyright: "© HUD FRAMEWORK · PAPERLAB THEME" },
-
-  panels: {
-    replay: "SURVEY REPLAY", replayNote: "1 H = 3.2 S",
-    waypoints: "CHECKPOINT GATES", wpNote: "MISSION PLAN v3",
-    formats: "KEPLER PROGRAM", schedule: "COMPLETION WINDOW",
-    vpTitle: "K2 SECTOR — SURVEY TRAVERSE 2026", vpNote: "APPROACH → SUMMIT RIDGE",
-    profile: "TERRAIN PROFILE", gradient: "SLOPE / KM",
-    origins: "CREW ORIGINS", cumulative: "CUMULATIVE GAIN / LOSS",
-    results: "CREW TIMES 2025", log: "MISSION LOG", bigLabel: "LEAD ALTITUDE",
-  },
-  resultsTags: ["CREW A", "CREW B"],
-  legend: [[false, "L1 · 2025"], [false, "L2 · 2025"], [true, "GATE LIMIT"], [false, "TRAVERSE"]],
-
-  kpis: [
-    { id: "km", label: "LEAD · KM" },
-    { id: "alt", label: "ALTITUDE · M" },
-    { id: "dplus", label: "GAIN CUMUL · M" },
-    { id: "next", label: "NEXT GATE" },
-  ],
-
-  race: {
-    name: "Kepler Traverse", edition: 2026,
-    km: 120, cutoff: 48, posts: 10, field: 480,
-    start: "DEPLOY · APPROACH CAMP", startHour: 6,
-    days: ["SOL1", "SOL2", "SOL3", "SOL4", "SOL5"],
-    leaderHours: 19.2,
-    postNames: ["APPROACH", "GLACIER GATE", "NORTH COL", "HIGH CAMP", "RIDGE GATE", "SUMMIT",
-      "EAST SADDLE", "MORAINE", "LOW CAMP", "EXIT"],
-    nations: ["USA", "JPN", "DEU", "CAN", "AUS", "KOR", "GBR", "NOR"],
-    targets: [["VETERAN", 20, 26], ["STANDARD", 28, 40]],
-  },
-
-  geo: {
-    seed: 70517, island: false, widthM: 52000, maxAlt: 4200,
-    contourStep: 250, contourMinor: 50, vert: 3,
-    peaks: ["KEPLER PEAK", "ARRAY RIDGE"],
-    areas: ["NORTH BASIN", "EAST GLACIER", "OLD MORAINE"],
-  },
-
-  globe: { hub: [43.6, -110.7], hubLabel: "GROUND STATION K2" },
-
-  view: { title: "KEPLER TRAVERSE", tagline: "04.09.26 · 06H00" },
-
-  log: {
-    start: "DEPLOY · APPROACH CAMP, SECTOR K2",
-    pass: (key, name, c, clock) => `${key} ${name} · GATE ${c.code} ${c.name} · km ${c.km.toFixed(1)} · ${c.alt} m · ${clock}`,
-    finish: (key, name, where, clock) => `${key} ${name} · COMPLETE ${where} · ${clock}`,
-    cutoff: (c, wall) => `GATE ${c.code} ${c.name} LOCKED · ${wall}`,
-  },
+  chrome: { ...orbital.chrome, copyright: "© HUD FRAMEWORK · PAPERLAB THEME" },
 };

@@ -47,10 +47,6 @@ async function applyTheme(id) {
   const light = document.documentElement.dataset.scheme === "light";
   for (const p of themeCssKeys) r.removeProperty(p);
   themeCssKeys = [];
-  if (!light && theme.tokens.css) {
-    for (const [k, v] of Object.entries(theme.tokens.css)) r.setProperty(k, v);
-    themeCssKeys = Object.keys(theme.tokens.css);
-  }
   if (light) {
     // paper/ink base comes from the :root[data-scheme="light"] block, but each
     // theme keeps its hue identity via a print-appropriate light accent
@@ -65,6 +61,12 @@ async function applyTheme(id) {
     r.setProperty("--bg2", theme.tokens.bg2 ?? "#0b0b0d");
   }
   r.setProperty("--accent-use", theme.tokens.accentUse ?? 1);
+  // per-scheme extra tokens (applied after the base bg/accent so they can override them)
+  const extra = light ? theme.tokens.cssLight : theme.tokens.css;
+  if (extra) {
+    for (const [k, v] of Object.entries(extra)) r.setProperty(k, v);
+    themeCssKeys = Object.keys(extra);
+  }
   if (ACCENT_OVERRIDE) {
     const n = parseInt(ACCENT_OVERRIDE.slice(1), 16);
     r.setProperty("--accent", ACCENT_OVERRIDE);
