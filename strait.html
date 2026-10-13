@@ -33,7 +33,7 @@
     cursor: pointer; user-select: none;
   }
   .menu-row:hover { color: var(--fg); }
-  .menu-row b { margin-left: auto; font-weight: 300; color: var(--faint); font-variant-numeric: tabular-nums; }
+  .menu-row b { margin-left: auto; font-weight: 300; color: var(--dim); font-variant-numeric: tabular-nums; }
   .menu-row.hot b { color: var(--accent); }
   .menu-row.on { color: var(--fg); background: rgba(var(--accent-rgb), 0.07); }
   .menu-row .box {
@@ -46,13 +46,13 @@
   .menu-row.checked .box::after { content: "✕"; }
   .menu-title { font-size: 12px; letter-spacing: 0.18em; padding: 4px 2px 6px; }
   .menu-title small { float: right; color: var(--accent); font-size: 8px; }
-  .layers-label { font-size: 7.5px; letter-spacing: 0.2em; color: var(--faint); margin: 8px 2px 2px; }
+  .layers-label { font-size: 7.5px; letter-spacing: 0.2em; color: var(--dim); margin: 8px 2px 2px; }
 
   /* ---------- map viewport ---------- */
   .viewport { cursor: crosshair; }
   .viewport > canvas#map { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
-  .viewport .hint { position: absolute; left: 46px; bottom: 10px; color: var(--faint); font-size: 8px; letter-spacing: 0.16em; z-index: 2; pointer-events: none; }
-  .viewport .seal { position: absolute; right: 10px; bottom: 8px; color: var(--faint); font-size: 7.5px; letter-spacing: 0.2em; z-index: 2; pointer-events: none; text-align: right; }
+  .viewport .hint { position: absolute; left: 46px; bottom: 10px; color: var(--dim); font-size: 8px; letter-spacing: 0.16em; z-index: 2; pointer-events: none; }
+  .viewport .seal { position: absolute; right: 10px; bottom: 8px; color: var(--dim); font-size: 7.5px; letter-spacing: 0.2em; z-index: 2; pointer-events: none; text-align: right; }
   .viewport header { pointer-events: none; }
 
   /* ---------- bottom strip: 4 instruments ---------- */
@@ -64,7 +64,7 @@
   .inspector canvas.hull { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
   .hull-wrap { position: relative; min-height: 0; }
   .kv { display: grid; grid-template-columns: auto 1fr; gap: 2.5px 10px; font-size: 8.5px; align-content: start; }
-  .kv dt { color: var(--faint); letter-spacing: 0.16em; }
+  .kv dt { color: var(--dim); letter-spacing: 0.16em; }
   .kv dd { text-align: right; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .kv dd.acc { color: var(--accent); }
   .kv dd.score-bad { color: var(--danger); }
@@ -80,11 +80,11 @@
   .feed { list-style: none; position: absolute; inset: 0; overflow: hidden; font-size: 8.5px; }
   .feed li { display: grid; grid-template-columns: 30px 52px 1fr auto; gap: 8px; padding: 2.5px 0; color: color-mix(in srgb, var(--fg) 72%, transparent); white-space: nowrap; }
   .feed li:first-child { color: var(--fg); }
-  .feed time { color: var(--faint); font-variant-numeric: tabular-nums; }
-  .feed .code { color: var(--faint); letter-spacing: 0.08em; overflow: hidden; }
+  .feed time { color: var(--dim); font-variant-numeric: tabular-nums; }
+  .feed .code { color: var(--dim); letter-spacing: 0.08em; overflow: hidden; }
   .feed span.msg { overflow: hidden; }
   .feed li.warn .code, .feed li.warn span.msg { color: var(--accent); }
-  .feed .sev { font-size: 7px; letter-spacing: 0.14em; border: var(--line-w) solid var(--line); padding: 0 3px; color: var(--faint); }
+  .feed .sev { font-size: 7px; letter-spacing: 0.14em; border: var(--line-w) solid var(--line); padding: 0 3px; color: var(--dim); }
   .feed li.warn .sev { border-color: rgba(var(--accent-rgb), 0.5); color: var(--accent); }
   .feed li.crit .sev { border-color: rgba(var(--danger-rgb), 0.6); color: var(--danger); }
 
@@ -93,7 +93,7 @@
   #vessels tr { cursor: pointer; }
   #vessels tr.on td { color: var(--fg); background: rgba(var(--accent-rgb), 0.08); }
   #vessels tr.on td:first-child { color: var(--accent); }
-  #vessels td.st-wait { color: var(--faint); }
+  #vessels td.st-wait { color: var(--dim); }
   #vessels td.st-go { color: var(--fg); }
   #vessels td.name { max-width: 88px; overflow: hidden; text-overflow: ellipsis; }
 

@@ -13,9 +13,9 @@
   .preview { position: relative; border: var(--line-w) solid var(--line); overflow: hidden; display: flex; flex-direction: column; }
   .preview > canvas.lab-sparks { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
   .preview > .pv-inner { position: relative; z-index: 2; flex: 1; display: flex; flex-direction: column; gap: 10px; padding: 12px; min-height: 0; }
-  .pv-head { display: flex; align-items: center; gap: 8px; font-size: 8px; letter-spacing: 0.2em; color: var(--faint); }
+  .pv-head { display: flex; align-items: center; gap: 8px; font-size: 8px; letter-spacing: 0.2em; color: var(--dim); }
   .pv-head b { color: var(--fg); font-weight: 300; letter-spacing: 0.24em; }
-  .pv-head .cfg { margin-left: auto; font-size: 7.5px; color: var(--faint); }
+  .pv-head .cfg { margin-left: auto; font-size: 7.5px; color: var(--dim); }
   .ctl { padding: 5px 0; }
   .ctl .lbl { display: flex; justify-content: space-between; font-size: 7.5px; letter-spacing: 0.18em; color: var(--dim); margin-bottom: 2px; }
   .ctl .lbl output { color: var(--fg); font-variant-numeric: tabular-nums; }
@@ -85,7 +85,7 @@
           <input class="hud-range" type="range" id="au-l" min="0" max="1" step="0.05" value="1"></div>
         <div class="ctl"><div class="lbl"><span data-en="ACCENT-USE · RIGHT">ACCENT-USE · 右侧</span><output id="o-au-r">1.0</output></div>
           <input class="hud-range" type="range" id="au-r" min="0" max="1" step="0.05" value="1"></div>
-        <p style="font-size:8px;color:var(--faint);line-height:1.8;letter-spacing:0.06em"
+        <p style="font-size:8px;color:var(--dim);line-height:1.8;letter-spacing:0.06em"
      data-en="0 = fully monochrome UI (accent collapses to ink); 1 = full accent participation. Independent of RATIO: RATIO drives the screen sparks, ACCENT-USE drives UI controls.">
           0 = 完全单色界面(强调色全部退成白);1 = 强调色全额参与。与 RATIO 独立:RATIO 管屏幕火星,ACCENT-USE 管界面控件。</p>
       </div>
@@ -102,7 +102,7 @@
             <button class="hud-btn" data-acc="#46d8ff" data-en="CYAN" style="font-size:7.5px;padding:4px 8px;margin:0">青</button>
             <button class="hud-btn" data-acc="#baff5c" data-en="LIME" style="font-size:7.5px;padding:4px 8px;margin:0">荧绿</button>
           </div></div>
-        <p style="font-size:8px;color:var(--faint);line-height:1.8;letter-spacing:0.06em"
+        <p style="font-size:8px;color:var(--dim);line-height:1.8;letter-spacing:0.06em"
      data-en="Overrides --accent / --accent-rgb on :root: both panes and the console re-ink together; buttons, badges, progress bars and tabs update live. The spark palette above stays independent. Works in both schemes; reproducible via ?accent=ff9a3c.">
           在 :root 上覆盖 --accent / --accent-rgb:两侧预览与左侧控制台同步换色,按钮、徽章、进度条、页签等全部强调位即时生效;火星点缀色由上方 PALETTE 独立控制,互不影响。深浅两种场景同时生效,可用 ?accent=ff9a3c 复现。</p>
       </div>
@@ -113,7 +113,7 @@
       <div class="body">
         <div class="ctl"><div class="lbl"><span data-en="LINE-W · GLOBAL WIDTH PX">LINE-W · 全局线宽 PX</span><output id="o-linew">1.0</output></div>
           <input class="hud-range" type="range" id="p-linew" min="0.5" max="3" step="0.5" value="1"></div>
-        <p style="font-size:8px;color:var(--faint);line-height:1.8;letter-spacing:0.06em"
+        <p style="font-size:8px;color:var(--dim);line-height:1.8;letter-spacing:0.06em"
      data-en="Panel borders, dividers and control strokes share --line-w; corner brackets use --bracket-w. 0.5 = hairline scanlines, 2 = heavy instrument stroke.">
           面板边框、分隔线、控件描边共用 --line-w;角括弧用 --bracket-w。0.5 = 发丝级扫描线,2 = 粗描边仪表感。</p>
       </div>

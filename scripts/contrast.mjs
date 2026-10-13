@@ -19,13 +19,6 @@ const TEXT = 4.5, UI = 3;
 // Known global failures tracked as issues; reported but not fatal unless --strict.
 // Remove an entry once it is fixed so the check ratchets.
 const KNOWN = [
-  // baseline of the original phosphor themes (faint used as text — see repo issue)
-  "ember+phosphor/dark/faint",
-  "ember+phosphor/light/faint",
-  "orbital+phosphor/dark/faint",
-  "orbital+phosphor/light/faint",
-  "cinder+phosphor/dark/faint",
-  "cinder+phosphor/light/faint",
 ];
 
 // ---------- colour math ----------
@@ -97,7 +90,7 @@ for (const theme of themes) for (const style of styles) for (const scheme of ["d
     const col = (name) => { const r = resolve(t, name); return r && over(r.rgb, r.a, bg); };
     const ac = over(resolve(t, "--accent").rgb, Math.min(1, 0.9 * t.accentUse), bg); // --ac in hud-components.css
     const checks = [
-      ["fg", col("--fg"), TEXT], ["dim", col("--dim"), TEXT], ["faint", col("--faint"), TEXT],
+      ["fg", col("--fg"), TEXT], ["dim", col("--dim"), TEXT], ["faint(non-text)", col("--faint"), 0],
       ["accent", col("--accent"), TEXT], ["ac(control)", ac, UI], ["danger", col("--danger"), TEXT],
       ["line-strong", col("--line-strong"), UI], ["line", col("--line"), 0],
     ];
@@ -114,6 +107,16 @@ for (const theme of themes) for (const style of styles) for (const scheme of ["d
     }
     rows.push(row);
   }
+}
+
+// --faint is reserved for decorative / non-text use (borders, disabled states, glyphs).
+// Any other `color: var(--faint)` is information-bearing text and must use --dim or --fg.
+const ALLOW_FAINT_TEXT = /:disabled|summary::before/;
+for (const f of ["css/hud.css", "css/hud-components.css", ...readdirSync(root).filter((f) => f.endsWith(".html"))]) {
+  readFileSync(join(root, f), "utf8").split("\n").forEach((line, i) => {
+    if (/(^|[^-\w])color:\s*var\(--faint\)/.test(line) && !ALLOW_FAINT_TEXT.test(line))
+      fails.push({ key: `faint-as-text ${f}:${i + 1}`, r: 0, min: TEXT, known: false, color: "--faint", bg: "text" });
+  });
 }
 
 console.table(rows);
