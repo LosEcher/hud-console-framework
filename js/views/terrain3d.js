@@ -541,7 +541,7 @@ export function createTerrain(canvas, overlay, model, theme) {
 
   function drawAreas(P) {
     ctx.save();
-    ctx.font = '8px "Plex", ui-monospace, monospace';
+    ctx.font = '9px "Plex", ui-monospace, monospace';
     ctx.textAlign = "center";
     for (const a of areas) {
       const q = P(a.w);
