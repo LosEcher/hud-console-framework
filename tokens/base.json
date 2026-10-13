@@ -94,5 +94,16 @@
 
   "elevation": {
     "comment": "无阴影层级体系:深度只靠边框/渐变/括弧表达,禁止投影。唯一的 glow 是轨迹辉光(shadowBlur)。"
+  },
+
+  "presets": {
+    "comment": "主题预设的令牌差异。themes/*.js 的 tokens.css 仅深色场景生效,切换主题时清除。",
+    "paperlab": {
+      "source": "@mika_systems Paper Lab 视频帧取样;字号/间距/动效为目测估算",
+      "bg": "#0c0c0c", "bg2": "#0c0c0c", "fg": "#e6e6e6", "dim": "#8a8a8a", "faint": "#666666",
+      "line": "#2e2e2e", "surface": "#171717", "surface2": "#202020",
+      "accent": "#c8746a", "accentRgb": "200,116,106", "accentUse": 0.6, "radius": "2px",
+      "sparkDensity": 0, "scanlines": "off", "panelGradient": "off → var(--surface)", "bracketColor": "var(--line)"
+    }
   }
 }
