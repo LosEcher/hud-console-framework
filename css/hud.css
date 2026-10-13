@@ -20,11 +20,17 @@
   /* line system: hairlines are part of the design language, so width is a token */
   --line-w: 1px;
   --bracket-w: 1px;
+  /* surface model & atmosphere — themes override these instead of using theme-name selectors */
+  --body-bg: radial-gradient(120% 90% at 50% 40%, var(--bg2) 0%, var(--bg) 70%);
+  --panel-bg: linear-gradient(180deg, color-mix(in srgb, var(--fg) 2.5%, transparent), color-mix(in srgb, var(--fg) 0.8%, transparent));
+  --bracket-color: var(--fg);
+  --radius: 0;
+  --scanline-opacity: 1;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html, body { height: 100%; }
 body {
-  background: radial-gradient(120% 90% at 50% 40%, var(--bg2) 0%, var(--bg) 70%);
+  background: var(--body-bg);
   color: var(--fg);
   font: 300 10px/1.4 "Plex", ui-monospace, monospace;
   letter-spacing: 0.04em;
@@ -39,6 +45,7 @@ body::after {
   inset: 0;
   pointer-events: none;
   background: repeating-linear-gradient(0deg, color-mix(in srgb, var(--fg) 2.5%, transparent) 0 1px, transparent 1px 3px);
+  opacity: var(--scanline-opacity);
   z-index: 20;
 }
 #grain { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; opacity: var(--grain-opacity, 0.055); mix-blend-mode: var(--grain-blend, screen); z-index: 21; }
@@ -104,7 +111,8 @@ body::after {
 .panel {
   position: relative;
   border: var(--line-w) solid var(--line);
-  background: linear-gradient(180deg, color-mix(in srgb, var(--fg) 2.5%, transparent), color-mix(in srgb, var(--fg) 0.8%, transparent));
+  background: var(--panel-bg);
+  border-radius: var(--radius);
   display: flex;
   flex-direction: column;
   min-height: 0;
@@ -115,7 +123,7 @@ body::after {
   content: "";
   position: absolute;
   width: 9px; height: 9px;
-  border: var(--bracket-w) solid var(--fg);
+  border: var(--bracket-w) solid var(--bracket-color);
   pointer-events: none;
   z-index: 3;
 }
@@ -235,10 +243,3 @@ td.num, th.num { text-align: right; padding-left: 8px; font-variant-numeric: tab
   --grain-opacity: 0.08;
 }
 
-/* ---------- paperlab: flat panels (dark scheme only) ---------- */
-:root:not([data-scheme="light"]) body[data-theme="paperlab"] { background: var(--bg); }
-:root:not([data-scheme="light"]) body[data-theme="paperlab"]::after { display: none; }
-:root:not([data-scheme="light"]) body[data-theme="paperlab"] #grain { display: none; }
-:root:not([data-scheme="light"]) body[data-theme="paperlab"] .panel { background: var(--surface, transparent); border-radius: var(--radius, 0); }
-:root:not([data-scheme="light"]) body[data-theme="paperlab"] .panel::before,
-:root:not([data-scheme="light"]) body[data-theme="paperlab"] .panel::after { border-color: var(--line); }

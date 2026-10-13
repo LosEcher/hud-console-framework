@@ -10,6 +10,8 @@
     "url": "https://github.com/LosEcher/hud-console-framework"
   },
   "scripts": {
-    "dev": "node server.mjs"
+    "dev": "node server.mjs",
+    "contrast": "node scripts/contrast.mjs",
+    "check": "node --check server.mjs && node scripts/contrast.mjs"
   }
 }
