@@ -19,8 +19,13 @@
       <div><b id="brand-name">CONSOLE</b><small id="brand-sub">HUD FRAMEWORK</small></div>
     </div>
     <div class="ticker" id="ticker"><span></span><span></span><span></span></div>
-    <div class="pages" id="site-nav"><a href="strait.html">STRAIT</a><a href="lab.html">LAB</a><a href="components.html">COMPONENTS</a></div>
-    <div class="pages" id="theme-nav"></div>
+    <!-- one grid cell for every nav cluster: .top is a fixed 4-column grid, loose
+         .pages children used to spill into implicit rows and overlap the panels -->
+    <nav class="navs" id="navs">
+      <div class="pages" id="site-nav"><a href="strait.html">STRAIT</a><a href="lab.html">LAB</a><a href="components.html">COMPONENTS</a></div>
+      <div class="pages" id="theme-nav"></div>
+      <div class="pages" id="scheme-nav"></div>
+    </nav>
     <div class="clock">
       <div class="legend" id="legend"></div>
       <div><small id="date"></small><b id="clock"></b></div>
