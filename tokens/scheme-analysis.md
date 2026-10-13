@@ -16,7 +16,7 @@
 | 雾/海/等高线色调 | 浅蓝白提亮 | 需压暗成灰墨 | 构造时用 palette 混合基色 |
 | 扫描线 | 白 2.5% | 墨 2.5% | 改用 `color-mix(var(--fg) 2.5%)` 自动翻转 |
 | 胶片颗粒 | screen 混合 | multiply 混合 | `--grain-blend` 变量:dark=screen / light=multiply |
-| glitch 黑块 | 黑块+白亮线 | 反白:墨块+墨亮线 | 用 bg/ink 令牌 |
+| glitch 黑块 | 黑块+白亮线 | 条带错位+墨亮线(不填纸色实块,否则成白洞) | 深色用 bg/ink 令牌;reduced motion / 氛围关闭时不绘制 |
 | 强调色 | `#ff9a3c` 亮琥珀 | 同色相降明度 `#b35c00`(白底对比度) | `--accent` 按 scheme 覆盖 |
 | 危险色 | `#ff6056` | `#d43a2f` | 同上 |
 | 轨迹辉光 shadowBlur | 亮色辉光 | 深色"蚀刻"感,保留 shadowBlur 无妨 | 不变 |

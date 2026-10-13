@@ -28,7 +28,7 @@ description: 构建"科幻控制室 HUD"风格的单页数据控制台——近�
 | UTC 时钟 | 每秒 ISO 时间 + 日期 | 5 行 |
 | 页脚数据列 | 16 个数值,每 500ms 随机一个 scramble | 10 行 |
 | 胶片颗粒 | 192px 随机 tile → pattern,偶数帧随机偏移重绘 | 20 行 |
-| glitch | 每 0.6–3s 爆发 1–4 个:slice(已渲染帧条带错位)/block(黑块+亮线)/bar(白细线),存活 <0.4s | 40 行 |
+| glitch | 每 0.6–3s 爆发 1–4 个:slice(已渲染帧条带错位)/block(深色:黑块+亮线;浅色:条带错位+墨线,不填纸色以免成白洞)/bar(细线),存活 <0.4s;reduced motion 或氛围层关闭(paperlab、?fx=0)时整体关闭 | 40 行 |
 
 scramble 实现要点:glyphs 池 `"0123456789#%/<>"`,按进度比例逐字符 reveal,空格跳过,420ms 内 settle;用 `dataset.target` 防过期帧覆盖。
 
