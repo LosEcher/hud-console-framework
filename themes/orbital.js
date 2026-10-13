@@ -3,7 +3,7 @@
 
 export default {
   id: "orbital",
-  tokens: { accent: "#46d8ff", accentRgb: "70,216,255", bg: "#020304", bg2: "#071014", lightAccent: "#0e7d99", lightAccentRgb: "14,125,153" },
+  tokens: { accent: "#46d8ff", accentRgb: "70,216,255", bg: "#020304", bg2: "#071014", lightAccent: "#0a6a82", lightAccentRgb: "10,106,130" },
   spark: { density: 130, ratio: 0.2, palette: ["70,216,255", "150,235,255"], lightPalette: ["14,125,153", "31,133,158"], speed: 0.8, cometEvery: 3.2, opacity: 0.5 },
 
   brand: { name: "KEPLER OPS", sub: "GROUND STATION · K2 ARRAY · 2026" },

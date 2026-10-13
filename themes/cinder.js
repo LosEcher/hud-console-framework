@@ -3,7 +3,7 @@
 
 export default {
   id: "cinder",
-  tokens: { accent: "#ff4d3d", accentRgb: "255,77,61", bg: "#040303", bg2: "#120b08", lightAccent: "#c0392b", lightAccentRgb: "192,57,43" },
+  tokens: { accent: "#ff4d3d", accentRgb: "255,77,61", bg: "#040303", bg2: "#120b08", lightAccent: "#b0352b", lightAccentRgb: "176,53,43" },
   spark: { density: 150, ratio: 0.35, palette: ["255,77,61", "255,154,60", "255,120,40"], lightPalette: ["192,57,43", "179,92,0", "191,103,34"], speed: 1.3, turbulence: 0.0022, cometEvery: 1.6, opacity: 0.65 },
 
   brand: { name: "CINDERNET", sub: "VOLCANIC GRID · SECTOR 7 · 2026" },

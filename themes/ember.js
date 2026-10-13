@@ -3,7 +3,7 @@
 
 export default {
   id: "ember",
-  tokens: { accent: "#ff9a3c", accentRgb: "255,154,60", lightAccent: "#b35c00", lightAccentRgb: "179,92,0" },
+  tokens: { accent: "#ff9a3c", accentRgb: "255,154,60", lightAccent: "#9a5200", lightAccentRgb: "154,82,0" },
   spark: { density: 110, ratio: 0.14, palette: ["255,154,60"], lightPalette: ["179,92,0"], speed: 1, cometEvery: 2.4, opacity: 0.55 },
 
   brand: { name: "EMBER", sub: "DIAGONALE DES FOUS · 2026" },

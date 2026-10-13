@@ -19,25 +19,13 @@ const TEXT = 4.5, UI = 3;
 // Known global failures tracked as issues; reported but not fatal unless --strict.
 // Remove an entry once it is fixed so the check ratchets.
 const KNOWN = [
-  // baseline of the original phosphor themes (see repo issues: dim / faint / light accent+danger)
-  "ember/dark/dim",
+  // baseline of the original phosphor themes (faint used as text — see repo issue)
   "ember/dark/faint",
-  "ember/light/dim",
   "ember/light/faint",
-  "ember/light/accent",
-  "ember/light/danger",
-  "orbital/dark/dim",
   "orbital/dark/faint",
-  "orbital/light/dim",
   "orbital/light/faint",
-  "orbital/light/accent",
-  "orbital/light/danger",
-  "cinder/dark/dim",
   "cinder/dark/faint",
-  "cinder/light/dim",
   "cinder/light/faint",
-  "cinder/light/accent",
-  "cinder/light/danger",
 ];
 
 // ---------- colour math ----------

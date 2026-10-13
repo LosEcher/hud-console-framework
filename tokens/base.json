@@ -26,8 +26,8 @@
     "selector": ":root[data-scheme=\"light\"]",
     "light": {
       "bg": "#f2f1ed", "bg2": "#e6e4de", "fg": "#16161a",
-      "accent": "#b35c00", "accentRgb": "179,92,0",
-      "danger": "#d43a2f", "dangerRgb": "212,58,47",
+      "accent": "#9a5200", "accentRgb": "154,82,0",
+      "danger": "#b33128", "dangerRgb": "179,49,40",
       "grainBlend": "multiply", "grainOpacity": 0.08
     },
     "activate": "JS: document.documentElement.dataset.scheme='light'; refreshPalette(); 重放主题以重建 WebGL 点云"
