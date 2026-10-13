@@ -131,6 +131,12 @@ function createGlitches(source, rand) {
       if (t > g.until) { glitches.splice(i, 1); continue; }
       if (g.type === "slice") {
         ctx.drawImage(source, g.x * dpr, g.y * dpr, g.w * dpr, g.h * dpr, g.x + g.shift, g.y, g.w, g.h);
+      } else if (g.type === "block" && pal.isLight) {
+        // light scheme: an opaque paper-coloured block reads as a white hole in the
+        // cloud, not a signal drop-out. Displace the band instead and keep the ink line.
+        ctx.drawImage(source, g.x * dpr, g.y * dpr, g.w * dpr, g.h * dpr, g.x + g.shift * 0.5, g.y, g.w, g.h);
+        ctx.fillStyle = ink(0.12);
+        ctx.fillRect(g.x, g.y + g.h - 2, g.w * 0.6, 1);
       } else if (g.type === "block") {
         ctx.fillStyle = `rgb(${bgStr()})`;
         ctx.fillRect(g.x, g.y, g.w, g.h);
@@ -340,7 +346,12 @@ export function createTerrain(canvas, overlay, model, theme) {
   }, { passive: false });
   canvas.addEventListener("dblclick", () => Object.assign(cam, HOME));
 
-  const drawGlitches = createGlitches(canvas, rand);
+  // glitches are atmosphere + flashing motion: off under reduced motion (WCAG 2.3) and
+  // whenever the style/?fx= switched the atmosphere layers off (scanline opacity 0)
+  const rootCs = getComputedStyle(document.documentElement);
+  const glitchOn = document.documentElement.dataset.motion !== "reduced"
+    && parseFloat(rootCs.getPropertyValue("--scanline-opacity") || "1") > 0;
+  const drawGlitches = glitchOn ? createGlitches(canvas, rand) : () => {};
   const placed = [];
   const fits = (x, y, width, height) => {
     const r = [x, y - height / 2, x + width, y + height / 2];

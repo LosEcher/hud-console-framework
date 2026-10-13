@@ -106,7 +106,7 @@ export default {
    - `ink(0.4)` = 主色 40% 透明(CSS 与 Canvas 通用);
    - WebGL 片元输出**预乘 alpha**(`o = vec4(col * a, a)`),不要输出 alpha=1;
    - 点云/线条基色用 `uniform vec3 uInk`(= `pal.fg/255`),不要 `vec3(1.0)`;
-   - 清屏色 `gl.clearColor(pal.bg[0]/255, …)`;glitch 黑块用 `rgb(${bgStr()})`。
+   - 清屏色 `gl.clearColor(pal.bg[0]/255, …)`;glitch 黑块用 `rgb(${bgStr()})`(仅深色;浅色改为条带错位,纸色实块会显示成白方块)。
 2. **CSS 侧**所有 `rgba(255,255,255,α)` 改写成
    `color-mix(in srgb, var(--fg) α%, transparent)`——`--fg` 翻墨时自动跟随。
 3. **切换流程**:设 `document.documentElement.dataset.scheme` → `refreshPalette()`
