@@ -13,7 +13,9 @@ import { refreshPalette, pal, acStr } from "../core/palette.js";
 
 const $ = (id) => document.getElementById(id);
 
-const THEME_IDS = ["ember", "orbital", "cinder"];
+const THEME_IDS = ["ember", "orbital", "cinder", "paperlab"];
+// extra CSS vars a theme may set via tokens.css; cleared on every switch
+let themeCssKeys = [];
 
 // URL-level accent override: ?accent=rrggbb re-inks the whole console regardless
 // of the active theme (light scheme included). Same contract as lab.html.
@@ -43,6 +45,12 @@ async function applyTheme(id) {
   document.body.dataset.theme = id;
   const r = document.documentElement.style;
   const light = document.documentElement.dataset.scheme === "light";
+  for (const p of themeCssKeys) r.removeProperty(p);
+  themeCssKeys = [];
+  if (!light && theme.tokens.css) {
+    for (const [k, v] of Object.entries(theme.tokens.css)) r.setProperty(k, v);
+    themeCssKeys = Object.keys(theme.tokens.css);
+  }
   if (light) {
     // paper/ink base comes from the :root[data-scheme="light"] block, but each
     // theme keeps its hue identity via a print-appropriate light accent

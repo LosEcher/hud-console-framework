@@ -234,3 +234,11 @@ td.num, th.num { text-align: right; padding-left: 8px; font-variant-numeric: tab
   --grain-blend: multiply;
   --grain-opacity: 0.08;
 }
+
+/* ---------- paperlab: flat panels (dark scheme only) ---------- */
+:root:not([data-scheme="light"]) body[data-theme="paperlab"] { background: var(--bg); }
+:root:not([data-scheme="light"]) body[data-theme="paperlab"]::after { display: none; }
+:root:not([data-scheme="light"]) body[data-theme="paperlab"] #grain { display: none; }
+:root:not([data-scheme="light"]) body[data-theme="paperlab"] .panel { background: var(--surface, transparent); border-radius: var(--radius, 0); }
+:root:not([data-scheme="light"]) body[data-theme="paperlab"] .panel::before,
+:root:not([data-scheme="light"]) body[data-theme="paperlab"] .panel::after { border-color: var(--line); }

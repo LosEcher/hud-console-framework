@@ -40,7 +40,7 @@ Any static file server works too — there is no build step.
 | `lab.html` | Token lab (spark particle params / line width / scheme switch, all reproducible via URL) |
 
 URL params (every page): `?scheme=dark|light` `?linew=0.5..3` `?accent=rrggbb` (re-ink the accent hue, any theme).
-Index additionally accepts `?theme=ember|orbital|cinder`; the lab additionally accepts `?density=&ratio=&opacity=&comet=`.
+Index additionally accepts `?theme=ember|orbital|cinder|paperlab`; the lab additionally accepts `?density=&ratio=&opacity=&comet=`.
 lab and components are bilingual (ZH/EN toggle in the top bar, auto-detected; override with `?lang=zh|en`).
 
 ## Directory layout

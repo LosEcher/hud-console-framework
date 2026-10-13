@@ -40,7 +40,7 @@ npm run dev        # -> http://localhost:7100 (或 PORT 环境变量)
 | `lab.html` | 令牌实验室(点缀色参数 / 线宽 / 场景切换,全部可 URL 复现) |
 
 URL 参数(任意页面):`?scheme=dark|light` `?linew=0.5..3` `?accent=rrggbb`(覆盖主色色相,不限主题)。
-主页额外支持 `?theme=ember|orbital|cinder`;lab 额外支持 `?density=&ratio=&opacity=&comet=`。
+主页额外支持 `?theme=ember|orbital|cinder|paperlab`;lab 额外支持 `?density=&ratio=&opacity=&comet=`。
 lab 与 components 为中英双语(顶栏 ZH/EN 切换,自动检测浏览器语言;可用 `?lang=zh|en` 强制)。
 
 ## 目录结构
