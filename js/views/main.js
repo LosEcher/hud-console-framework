@@ -52,8 +52,8 @@ async function applyTheme(id) {
     // theme keeps its hue identity via a print-appropriate light accent
     // (bright glow colours go muddy on paper and must be re-inked per theme).
     for (const p of ["--bg", "--bg2"]) r.removeProperty(p);
-    r.setProperty("--accent", theme.tokens.lightAccent ?? "#b35c00");
-    r.setProperty("--accent-rgb", theme.tokens.lightAccentRgb ?? "179,92,0");
+    r.setProperty("--accent", theme.tokens.lightAccent ?? "#9a5200");
+    r.setProperty("--accent-rgb", theme.tokens.lightAccentRgb ?? "154,82,0");
   } else {
     r.setProperty("--accent", theme.tokens.accent);
     r.setProperty("--accent-rgb", theme.tokens.accentRgb);

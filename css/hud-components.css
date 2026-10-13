@@ -18,7 +18,7 @@
   letter-spacing: 0.18em;
   color: var(--fg);
   background: color-mix(in srgb, var(--fg) 3%, transparent);
-  border: var(--line-w) solid var(--line);
+  border: var(--line-w) solid var(--line-strong);
   padding: 6px 12px;
   cursor: pointer;
   text-transform: uppercase;
@@ -43,7 +43,7 @@
   letter-spacing: 0.06em;
   color: var(--fg);
   background: color-mix(in srgb, var(--fg) 2%, transparent);
-  border: var(--line-w) solid var(--line);
+  border: var(--line-w) solid var(--line-strong);
   padding: 6px 10px;
   outline: none;
   width: 100%;
@@ -342,7 +342,7 @@ input[type="range"].hud-range:focus-visible { outline: 1px solid var(--ac-line);
 .hud-step.now .dot::after { content: ""; position: absolute; inset: 1px; background: var(--ac); animation: blink 1.1s steps(1) infinite; }
 
 /* ---------- segmented ---------- */
-.hud-segmented { display: inline-flex; border: var(--line-w) solid var(--line); }
+.hud-segmented { display: inline-flex; border: var(--line-w) solid var(--line-strong); }
 .hud-segmented button {
   font: inherit; font-size: 8px; letter-spacing: 0.16em; text-transform: uppercase;
   color: var(--faint); background: transparent; border: 0; padding: 5px 12px; cursor: pointer;
@@ -463,7 +463,7 @@ input[type="range"].hud-range:focus-visible { outline: 1px solid var(--ac-line);
 .hud-file .hud-progress { grid-column: 1 / -1; }
 
 /* ---------- input number ---------- */
-.hud-num { display: inline-flex; border: var(--line-w) solid var(--line); }
+.hud-num { display: inline-flex; border: var(--line-w) solid var(--line-strong); }
 .hud-num button {
   font: inherit; width: 24px; background: transparent; border: 0; color: var(--dim);
   cursor: pointer; font-size: 10px;
@@ -498,7 +498,7 @@ input[type="range"].hud-range:focus-visible { outline: 1px solid var(--ac-line);
 .hud-otp input {
   width: 26px; height: 32px; text-align: center;
   font: inherit; font-size: 14px; color: var(--fg);
-  background: color-mix(in srgb, var(--fg) 2%, transparent); border: var(--line-w) solid var(--line); outline: none;
+  background: color-mix(in srgb, var(--fg) 2%, transparent); border: var(--line-w) solid var(--line-strong); outline: none;
 }
 .hud-otp input:focus { border-color: var(--ac-line); }
 .hud-otp input.filled { border-color: var(--dim); }
@@ -520,7 +520,7 @@ input[type="range"].hud-range:focus-visible { outline: 1px solid var(--ac-line);
 .hud-cal { border: var(--line-w) solid var(--line); padding: 10px; width: 216px; }
 .hud-cal .cal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
 .hud-cal .cal-head b { font-weight: 300; font-size: 9px; letter-spacing: 0.24em; color: var(--fg); }
-.hud-cal .cal-head button { font: inherit; background: none; border: var(--line-w) solid var(--line); color: var(--dim); cursor: pointer; width: 18px; height: 18px; }
+.hud-cal .cal-head button { font: inherit; background: none; border: var(--line-w) solid var(--line-strong); color: var(--dim); cursor: pointer; width: 18px; height: 18px; }
 .hud-cal .cal-head button:hover { color: var(--fg); border-color: var(--dim); }
 .hud-cal .grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 1px; }
 .hud-cal .dow, .hud-cal .day { text-align: center; font-size: 7.5px; padding: 4px 0; }
