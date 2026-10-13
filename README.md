@@ -40,7 +40,7 @@ Any static file server works too — there is no build step.
 | `lab.html` | Token lab (spark particle params / line width / scheme switch, all reproducible via URL) |
 
 URL params (every page): `?scheme=dark|light` `?linew=0.5..3` `?accent=rrggbb` (re-ink the accent hue, any theme).
-Index additionally accepts `?theme=ember|orbital|cinder|paperlab`; the lab additionally accepts `?density=&ratio=&opacity=&comet=`.
+Index additionally accepts two independent layers — `?theme=ember|orbital|cinder` (world content) and `?style=phosphor|paperlab` (visual language) — plus preferences `?density=compact|cozy` `?motion=full|reduced` (defaults to `prefers-reduced-motion`) `?fx=0|1` (scanlines/grain/sparks). Legacy `?theme=paperlab` maps to `?theme=orbital&style=paperlab`; the lab additionally accepts `?density=&ratio=&opacity=&comet=`.
 Contrast check: `npm run contrast` computes WCAG ratios for every theme × scheme (text 4.5:1, controls 3:1) and exits non-zero on new failures; `-- --strict` also fails the known baseline.
 lab and components are bilingual (ZH/EN toggle in the top bar, auto-detected; override with `?lang=zh|en`).
 

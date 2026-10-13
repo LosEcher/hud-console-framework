@@ -246,3 +246,8 @@ td.num, th.num { text-align: right; padding-left: 8px; font-variant-numeric: tab
   --grain-opacity: 0.08;
 }
 
+
+/* ---------- motion preference (?motion=, defaults to prefers-reduced-motion) ---------- */
+:root[data-motion="reduced"] *, :root[data-motion="reduced"] *::before, :root[data-motion="reduced"] *::after {
+  transition-duration: 0s !important; animation-duration: 0s !important; animation-iteration-count: 1 !important;
+}

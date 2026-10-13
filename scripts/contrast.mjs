@@ -1,7 +1,7 @@
 #!/usr/bin/env node
-// WCAG 2.x contrast check for every theme × scheme. Zero dependencies.
+// WCAG 2.x contrast check for every theme (world) × style × scheme. Zero dependencies.
 // Resolves the same tokens the browser does: base values from css/hud.css (:root and
-// :root[data-scheme="light"]), per-theme overrides from themes/*.js, and the
+// :root[data-scheme="light"]), per-world accent/bg from themes/*.js, per-style tokens from styles/*.js, and the
 // `color-mix(in srgb, var(--fg) N%, transparent)` / `rgba(accent, a)` alphas composited
 // onto each surface they sit on. Exit code 1 on any failure not in KNOWN.
 //   npm run contrast            # table + failures
@@ -20,12 +20,12 @@ const TEXT = 4.5, UI = 3;
 // Remove an entry once it is fixed so the check ratchets.
 const KNOWN = [
   // baseline of the original phosphor themes (faint used as text — see repo issue)
-  "ember/dark/faint",
-  "ember/light/faint",
-  "orbital/dark/faint",
-  "orbital/light/faint",
-  "cinder/dark/faint",
-  "cinder/light/faint",
+  "ember+phosphor/dark/faint",
+  "ember+phosphor/light/faint",
+  "orbital+phosphor/dark/faint",
+  "orbital+phosphor/light/faint",
+  "cinder+phosphor/dark/faint",
+  "cinder+phosphor/light/faint",
 ];
 
 // ---------- colour math ----------
@@ -59,20 +59,23 @@ function resolve(t, name, depth = 0) {
   return null; // gradients etc.
 }
 
-// ---------- themes ----------
-const themeDir = join(root, "themes");
-const themes = [];
-for (const f of readdirSync(themeDir).filter((f) => f.endsWith(".js")).sort()) {
-  themes.push((await import(pathToFileURL(join(themeDir, f)).href)).default);
-}
+// ---------- worlds & styles ----------
+const load = async (dir) => {
+  const d = join(root, dir), out = [];
+  for (const f of readdirSync(d).filter((f) => f.endsWith(".js")).sort()) out.push((await import(pathToFileURL(join(d, f)).href)).default);
+  return out;
+};
+const themes = await load("themes");
+const styles = await load("styles");
 
-function tokensFor(theme, scheme) {
+// mirrors applyTheme() in js/views/main.js
+function tokensFor(theme, style, scheme) {
   const t = { ...BASE[scheme] };
   const k = theme.tokens;
-  if (scheme === "dark") { t["--accent"] = k.accent; t["--bg"] = k.bg ?? t["--bg"]; t["--bg2"] = k.bg2 ?? t["--bg2"]; }
-  else t["--accent"] = k.lightAccent ?? t["--accent"];
-  Object.assign(t, (scheme === "dark" ? k.css : k.cssLight) ?? {});
-  t.accentUse = k.accentUse ?? 1;
+  if (scheme === "dark") { t["--accent"] = style.accent?.dark ?? k.accent; t["--bg"] = k.bg ?? t["--bg"]; t["--bg2"] = k.bg2 ?? t["--bg2"]; }
+  else t["--accent"] = style.accent?.light ?? k.lightAccent ?? t["--accent"];
+  Object.assign(t, (scheme === "dark" ? style.css : style.cssLight) ?? {});
+  t.accentUse = style.accentUse ?? k.accentUse ?? 1;
   return t;
 }
 
@@ -88,8 +91,8 @@ function surfaces(t) {
 }
 
 const rows = [], fails = [];
-for (const theme of themes) for (const scheme of ["dark", "light"]) {
-  const t = tokensFor(theme, scheme);
+for (const theme of themes) for (const style of styles) for (const scheme of ["dark", "light"]) {
+  const t = tokensFor(theme, style, scheme);
   for (const [sname, bg] of surfaces(t)) {
     const col = (name) => { const r = resolve(t, name); return r && over(r.rgb, r.a, bg); };
     const ac = over(resolve(t, "--accent").rgb, Math.min(1, 0.9 * t.accentUse), bg); // --ac in hud-components.css
@@ -98,13 +101,13 @@ for (const theme of themes) for (const scheme of ["dark", "light"]) {
       ["accent", col("--accent"), TEXT], ["ac(control)", ac, UI], ["danger", col("--danger"), TEXT],
       ["line-strong", col("--line-strong"), UI], ["line", col("--line"), 0],
     ];
-    const row = { theme: theme.id, scheme, surface: sname };
+    const row = { theme: theme.id, style: style.id, scheme, surface: sname };
     for (const [n, c, min] of checks) {
       if (!c) continue;
       const r = ratio(c, bg);
       row[n] = r.toFixed(2) + (min && r < min ? " ✗" : "");
       if (min && r < min) {
-        const key = `${theme.id}/${scheme}/${n}`;
+        const key = `${theme.id}+${style.id}/${scheme}/${n}`;
         const known = !strict && KNOWN.includes(key);
         fails.push({ key: `${key}@${sname}`, r, min, known, color: toHex(c), bg: toHex(bg) });
       }

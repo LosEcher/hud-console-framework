@@ -13,9 +13,32 @@ import { refreshPalette, pal, acStr } from "../core/palette.js";
 
 const $ = (id) => document.getElementById(id);
 
-const THEME_IDS = ["ember", "orbital", "cinder", "paperlab"];
-// extra CSS vars a theme may set via tokens.css; cleared on every switch
+// Two independent layers:
+//   theme = world content (copy, terrain, race data, default accent)   ?theme=
+//   style = visual language (ladder, surfaces, atmosphere)             ?style=
+// plus user preferences ?scheme= ?accent= ?density= ?motion= ?fx=.
+const THEME_IDS = ["ember", "orbital", "cinder"];
+const STYLE_IDS = ["phosphor", "paperlab"];
+// backwards compatibility: paperlab used to be a theme (orbital world + paperlab look)
+const THEME_ALIASES = { paperlab: { theme: "orbital", style: "paperlab" } };
+// CSS vars set by the active style/preferences; cleared on every switch
 let themeCssKeys = [];
+
+const QS = new URLSearchParams(location.search);
+const pick1 = (v, allowed) => (allowed.includes(v) ? v : null);
+// density: compact = 8px gutters, cozy = 10px (default)
+const DENSITY = pick1(QS.get("density"), ["compact", "cozy"]) ?? "cozy";
+// motion: full | reduced (off = alias). Default follows prefers-reduced-motion.
+const MOTION = (() => {
+  const v = QS.get("motion");
+  if (v === "full") return "full";
+  if (v === "reduced" || v === "off") return "reduced";
+  return matchMedia("(prefers-reduced-motion: reduce)").matches ? "reduced" : "full";
+})();
+// fx: atmosphere layers (scanlines, grain, sparks). 0 turns all off; default = style decides.
+const FX = QS.get("fx") === "0" ? false : QS.get("fx") === "1" ? true : null;
+document.documentElement.dataset.motion = MOTION;
+let currentStyle = STYLE_IDS[0];
 
 // URL-level accent override: ?accent=rrggbb re-inks the whole console regardless
 // of the active theme (light scheme included). Same contract as lab.html.
@@ -38,11 +61,14 @@ function ensureSparksCanvas() {
   return canvas;
 }
 
-async function applyTheme(id) {
+async function applyTheme(id, styleId = currentStyle) {
   currentTheme = id;
+  currentStyle = styleId;
   if (stopLoop) { stopLoop(); stopLoop = null; }
   const theme = (await import(`../../themes/${id}.js`)).default;
+  const style = (await import(`../../styles/${styleId}.js`)).default;
   document.body.dataset.theme = id;
+  document.body.dataset.style = styleId;
   const r = document.documentElement.style;
   const light = document.documentElement.dataset.scheme === "light";
   for (const p of themeCssKeys) r.removeProperty(p);
@@ -52,21 +78,22 @@ async function applyTheme(id) {
     // theme keeps its hue identity via a print-appropriate light accent
     // (bright glow colours go muddy on paper and must be re-inked per theme).
     for (const p of ["--bg", "--bg2"]) r.removeProperty(p);
-    r.setProperty("--accent", theme.tokens.lightAccent ?? "#9a5200");
-    r.setProperty("--accent-rgb", theme.tokens.lightAccentRgb ?? "154,82,0");
+    r.setProperty("--accent", style.accent?.light ?? theme.tokens.lightAccent ?? "#9a5200");
+    r.setProperty("--accent-rgb", style.accent?.lightRgb ?? theme.tokens.lightAccentRgb ?? "154,82,0");
   } else {
-    r.setProperty("--accent", theme.tokens.accent);
-    r.setProperty("--accent-rgb", theme.tokens.accentRgb);
+    r.setProperty("--accent", style.accent?.dark ?? theme.tokens.accent);
+    r.setProperty("--accent-rgb", style.accent?.darkRgb ?? theme.tokens.accentRgb);
     r.setProperty("--bg", theme.tokens.bg ?? "#030304");
     r.setProperty("--bg2", theme.tokens.bg2 ?? "#0b0b0d");
   }
-  r.setProperty("--accent-use", theme.tokens.accentUse ?? 1);
-  // per-scheme extra tokens (applied after the base bg/accent so they can override them)
-  const extra = light ? theme.tokens.cssLight : theme.tokens.css;
-  if (extra) {
-    for (const [k, v] of Object.entries(extra)) r.setProperty(k, v);
-    themeCssKeys = Object.keys(extra);
-  }
+  r.setProperty("--accent-use", style.accentUse ?? theme.tokens.accentUse ?? 1);
+  // style tokens for the active scheme, then user preferences on top
+  const extra = { ...(light ? style.cssLight : style.css) };
+  if (DENSITY === "compact") extra["--gap"] = "8px";
+  const fxOn = FX ?? true;
+  if (!fxOn || MOTION === "reduced") { extra["--scanline-opacity"] = "0"; extra["--grain-opacity"] = "0"; }
+  for (const [k, v] of Object.entries(extra)) r.setProperty(k, v);
+  themeCssKeys = Object.keys(extra);
   if (ACCENT_OVERRIDE) {
     const n = parseInt(ACCENT_OVERRIDE.slice(1), 16);
     r.setProperty("--accent", ACCENT_OVERRIDE);
@@ -78,9 +105,11 @@ async function applyTheme(id) {
   if (sparks) sparks.stop();
   const sparkPalette = light && theme.spark?.lightPalette ? theme.spark.lightPalette
     : theme.spark?.palette ?? [acStr()];
+  const sparksOn = (FX ?? style.sparks) && MOTION !== "reduced";
   sparks = startSparks(ensureSparksCanvas(), {
     seed: theme.geo.seed ?? 99173,
     ...(theme.spark ?? {}),
+    ...(sparksOn ? {} : { density: 0, ratio: 0, opacity: 0, cometEvery: 0 }),
     palette: sparkPalette,
   });
 
@@ -270,8 +299,9 @@ async function applyTheme(id) {
   stopLoop = () => cancelAnimationFrame(raf);
 
   // theme switcher state
-  document.querySelectorAll(".pages button").forEach((b) => b.classList.toggle("on", b.dataset.theme === id));
-  try { localStorage.setItem("hud-theme", id); } catch {}
+  document.querySelectorAll(".pages button[data-theme]").forEach((b) => b.classList.toggle("on", b.dataset.theme === id));
+  document.querySelectorAll(".pages button[data-style]").forEach((b) => b.classList.toggle("on", b.dataset.style === styleId));
+  try { localStorage.setItem("hud-theme", id); localStorage.setItem("hud-style", styleId); } catch {}
 }
 
 // theme switcher in the top bar
@@ -286,12 +316,25 @@ for (const id of THEME_IDS) {
   pages.append(btn);
 }
 
+// style switcher: visual language, independent of the world
+const styleNav = $("style-nav") ?? document.createElement("div");
+styleNav.className = "pages";
+styleNav.id = "style-nav";
+if (!styleNav.parentElement) pages.after(styleNav);
+for (const id of STYLE_IDS) {
+  const btn = document.createElement("button");
+  btn.dataset.style = id;
+  btn.textContent = id.toUpperCase();
+  btn.addEventListener("click", () => applyTheme(currentTheme, id));
+  styleNav.append(btn);
+}
+
 // scheme switcher: dark phosphor vs light paper+ink; re-applies the theme so
 // WebGL clouds baked with the old ink are rebuilt.
 const schemes = $("scheme-nav") ?? document.createElement("div");
 schemes.className = "pages";
 schemes.id = "scheme-nav";
-if (!schemes.parentElement) pages.after(schemes);
+if (!schemes.parentElement) styleNav.after(schemes);
 for (const s of ["dark", "light"]) {
   const btn = document.createElement("button");
   btn.dataset.scheme = s;
@@ -307,7 +350,7 @@ function setScheme(s) {
   document.documentElement.dataset.scheme = s;
   try { localStorage.setItem("hud-scheme", s); } catch {}
   syncSchemeButtons();
-  applyTheme(currentTheme);
+  applyTheme(currentTheme, currentStyle);
 }
 
 let savedScheme = "dark";
@@ -317,9 +360,17 @@ if (requestedScheme === "light" || requestedScheme === "dark") savedScheme = req
 document.documentElement.dataset.scheme = savedScheme;
 syncSchemeButtons();
 
-let initial = THEME_IDS[0];
-try { initial = localStorage.getItem("hud-theme") || THEME_IDS[0]; } catch {}
-const requested = new URLSearchParams(location.search).get("theme");
-if (requested && THEME_IDS.includes(requested)) initial = requested;
+// resolve world + style: URL > localStorage > defaults; legacy ?theme=paperlab maps to orbital+paperlab
+let initial = THEME_IDS[0], initialStyle = STYLE_IDS[0];
+try {
+  initial = localStorage.getItem("hud-theme") || initial;
+  initialStyle = localStorage.getItem("hud-style") || initialStyle;
+} catch {}
+const requested = QS.get("theme");
+if (requested) initial = requested;
+if (THEME_ALIASES[initial]) ({ theme: initial, style: initialStyle } = THEME_ALIASES[initial]);
+const requestedStyle = QS.get("style");
+if (requestedStyle && STYLE_IDS.includes(requestedStyle)) initialStyle = requestedStyle;
 if (!THEME_IDS.includes(initial)) initial = THEME_IDS[0];
-applyTheme(initial);
+if (!STYLE_IDS.includes(initialStyle)) initialStyle = STYLE_IDS[0];
+applyTheme(initial, initialStyle);

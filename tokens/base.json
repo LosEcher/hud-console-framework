@@ -96,8 +96,8 @@
     "comment": "无阴影层级体系:深度只靠边框/渐变/括弧表达,禁止投影。唯一的 glow 是轨迹辉光(shadowBlur)。"
   },
 
-  "presets": {
-    "comment": "主题预设的令牌差异。themes/*.js 的 tokens.css(深色)/tokens.cssLight(浅色)按当前方案生效,切换时清除;文字层由 npm run contrast 校验。",
+  "styles": {
+    "comment": "视觉风格(style)的令牌差异,源文件在 styles/*.js:css(深色)/cssLight(浅色)按当前方案生效,切换时清除;与世界内容(themes/*.js)正交,文字层由 npm run contrast 按 theme×style×scheme 校验。",
     "paperlab": {
       "source": "@mika_systems Paper Lab 视频帧取样;faint/dim 为满足 4.5:1 已上调;字号/间距/动效为目测估算",
       "dark": { "bg": "#0c0c0c", "surface": "#171717", "surface2": "#202020", "line": "#2e2e2e", "faint": "#909090", "dim": "#b0b0b0", "fg": "#e6e6e6", "accent": "#c8746a" },
