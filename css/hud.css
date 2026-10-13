@@ -166,7 +166,8 @@ td.num, th.num { text-align: right; padding-left: 8px; font-variant-numeric: tab
 .checkpoints .body { overflow: hidden; }
 #checkpoints tr.on td { color: var(--fg); background: rgba(var(--accent-rgb), 0.08); }
 #checkpoints tr.on td:first-child { color: var(--accent); }
-#checkpoints tr.closed td { color: color-mix(in srgb, var(--fg) 30%, transparent); }
+/* closed gates: still information → --dim (≥4.5:1); state is carried by the strike-through, not by a sub-AA grey */
+#checkpoints tr.closed td { color: var(--dim); text-decoration: line-through; text-decoration-color: var(--faint); }
 #checkpoints td.name { max-width: 110px; overflow: hidden; text-overflow: ellipsis; }
 
 /* 3D viewport */

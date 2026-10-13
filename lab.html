@@ -166,6 +166,8 @@
 
 <script type="module">
 import { startChrome } from "./js/core/chrome.js";
+import { startPrefs } from "./js/core/prefs.js";
+startPrefs({ density: false, styles: false }); // lab: ?density= = spark density; previews need the phosphor surfaces
 import { startSparks } from "./js/core/sparks.js";
 import { refreshPalette, pal } from "./js/core/palette.js";
 import { initLang, onLang, t } from "./js/core/i18n.js";

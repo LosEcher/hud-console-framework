@@ -57,6 +57,15 @@ export function startChrome(theme, { legend, footer }) {
   }
   tctx.putImageData(img, 0, 0);
   const pattern = gctx.createPattern(tile, "repeat");
+  let gvCheck = -1, gv = true;
+  const grainVisible = () => {
+    const now = performance.now();
+    if (now - gvCheck > 500) { // getComputedStyle is not free; re-check twice a second
+      gvCheck = now;
+      gv = document.documentElement.dataset.motion !== "reduced" && parseFloat(getComputedStyle(grain).opacity) > 0;
+    }
+    return gv;
+  };
 
   const updateClock = () => {
     const now = new Date();
@@ -66,7 +75,8 @@ export function startChrome(theme, { legend, footer }) {
   updateClock();
 
   return (frameIndex) => {
-    if (frameIndex % 2 === 0) {
+    // grain is invisible when reduced motion / fx=0 / flat styles zero its opacity: skip the redraw
+    if (frameIndex % 2 === 0 && grainVisible()) {
       if (grain.width !== innerWidth || grain.height !== innerHeight) {
         grain.width = innerWidth;
         grain.height = innerHeight;
