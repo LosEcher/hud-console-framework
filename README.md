@@ -34,14 +34,18 @@ Any static file server works too — there is no build step.
 
 | Entry | Purpose |
 |---|---|
-| `index.html` | Main console demo (3D terrain + 2D instrument panels, 3 switchable themes) |
+| `index.html` | Main console demo (3D terrain + 2D instrument panels, 3 worlds × 2 styles) |
 | `strait.html` | Chokepoint watch demo (vessel-transit traffic console — a "business skin" built on the core layers; write-up in [docs/custom-console.md](docs/custom-console.md)) |
 | `components.html` | Component library (01 basics · 02 terminal · 03 table · 04 notes · 05 launcher · 06 report · 07 extended, 24 items) |
 | `lab.html` | Token lab (spark particle params / line width / scheme switch, all reproducible via URL) |
 
 URL params (every page): `?scheme=dark|light` `?linew=0.5..3` `?accent=rrggbb` (re-ink the accent hue, any theme).
-Index additionally accepts two independent layers — `?theme=ember|orbital|cinder` (world content) and `?style=phosphor|paperlab` (visual language) — plus preferences `?density=compact|cozy` `?motion=full|reduced` (defaults to `prefers-reduced-motion`) `?fx=0|1` (scanlines/grain/sparks). Legacy `?theme=paperlab` maps to `?theme=orbital&style=paperlab`; the lab additionally accepts `?density=&ratio=&opacity=&comet=`.
-Contrast check: `npm run contrast` computes WCAG ratios for every theme × scheme (text 4.5:1, controls 3:1) and exits non-zero on new failures; `-- --strict` also fails the known baseline.
+Every page also accepts `?style=phosphor|paperlab` (not the lab, whose previews need the phosphor surfaces) `?motion=full|reduced` (defaults to `prefers-reduced-motion`; reduced turns off sparks/scanlines/grain/transitions) and `?fx=0|1` (scanlines, grain, sparks). Index and components accept `?density=compact|cozy`.
+Index additionally accepts `?theme=ember|orbital|cinder`; legacy `?theme=paperlab` maps to `?theme=orbital&style=paperlab`. The lab's `?density=&ratio=&opacity=&comet=` are spark parameters.
+
+**Theme vs style.** A *theme* (`themes/*.js`) is world content: copy, terrain, race data, default accent. A *style* (`styles/*.js`) is the visual language: grey ladder (alpha-derived `phosphor` vs solid `paperlab`), surfaces, atmosphere layers. They are orthogonal — any world can wear any style. Resolution order: style defaults → world accent (if the style has none) → user preferences → URL.
+
+**Contrast check.** `npm run contrast` computes WCAG 2.x ratios for every theme × style × scheme (text 4.5:1, control accents and `--line-strong` 3:1), fails on any `color: var(--faint)` text (faint is non-text only), and checks `tokens/base.json §styles` against `styles/*.js`. `npm run check` = syntax check + contrast.
 lab and components are bilingual (ZH/EN toggle in the top bar, auto-detected; override with `?lang=zh|en`).
 
 ## Directory layout

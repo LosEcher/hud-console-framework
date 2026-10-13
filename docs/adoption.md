@@ -73,8 +73,8 @@ export default {
   tokens: {
     accent:    "#ff9a3c",   // 唯一强调色(深场景,发光体质)
     accentRgb: "255,154,60",
-    lightAccent:    "#b35c00",  // 浅场景同色相的"印刷版":发光色上纸会脏,必须重新调墨
-    lightAccentRgb: "179,92,0",
+    lightAccent:    "#9a5200",  // 浅场景同色相的"印刷版":发光色上纸会脏,必须重新调墨;纸面上需 ≥4.5:1
+    lightAccentRgb: "154,82,0",
     bg:        "#030304",   // 可省略,取默认近黑
   },
   // 面板标题/业务文案/日志模板/地球枢纽/KPI 定义……
@@ -84,6 +84,8 @@ export default {
 
 注册进 `js/views/main.js` 的 `THEME_IDS` 即出现在顶栏切换器;也可用
 `index.html?theme=mytheme` 直达。主题切换 = 重设 CSS 变量 + `refreshPalette()` + 重建视图。
+
+主题只管**世界内容**;视觉语言放在 `styles/*.js`(现有 `phosphor`、`paperlab`),和主题正交组合:`?theme=mytheme&style=paperlab`。写新风格时给 `css`(深色)和 `cssLight`(浅色)各一套变量(`--fg --dim --faint --line --surface --surface-2 --body-bg --panel-bg --bracket-color --radius --scanline-opacity --grain-opacity`),注册进 `js/core/prefs.js` 的 `STYLE_IDS`,在 `tokens/base.json §styles` 里登记,然后跑 `npm run contrast`。
 
 ---
 

@@ -15,7 +15,7 @@ description: 构建"科幻控制室 HUD"风格的单页数据控制台——近�
 
 1. **单色 + 单强调色**:画布 `#030304` 级近黑;fg 白;中间只允许 3 档白色透明度(0.45/0.22/0.13);全站唯一彩色 `--accent`(默认琥珀 `#ff9a3c`)。强调色**只标记关键状态**(领先者、警戒线、警告),绝不用于装饰。
 2. **等宽字体 + 字距层级**:一种 mono 细体(IBM Plex Mono Light 或 ui-monospace),基础 10px;标题用 letter-spacing(0.18–0.32em)而非字重分层;全大写;数字列 `font-variant-numeric: tabular-nums`。
-3. **面板即仪器**:1px 弱边框 + 极淡纵向渐变 + **四角 9px 直角括弧**(纯 CSS 伪元素)+ 字母角标(A/B/C)+ 右侧 7.5px 灰小注。面板 header 固定模板:`<span class="tag">A</span>TITLE<small>SOURCE</small>`。
+3. **面板即仪器**:1px 弱边框 + 极淡纵向渐变 + **四角 9px 直角括弧**(纯 CSS 伪元素)+ 字母角标(A/B/C)+ 右侧 9px(`--fs-xs`)dim 小注(信息文字 ≥4.5:1、≥9px;`--faint` 只用于非文字)。面板 header 固定模板:`<span class="tag">A</span>TITLE<small>SOURCE</small>`。
 4. **舱室网格布局**:顶栏 44px / 主体 / 底栏 18px;三列(左窄 320px / 中 1fr / 右 340px);统一 gap 10px;顶栏下缘一条短亮线作为签名。
 5. **三层氛围纹理**:径向渐变底 → CSS 扫描线(`repeating-linear-gradient(0deg, rgba(255,255,255,.025) 0 1px, transparent 1px 3px)`)→ JS 随机颗粒 canvas(opacity ≈0.055, mix-blend screen,每 2 帧重绘平移)。
 6. **运动 = 机器在干活**:只许四类动效——数字 scramble 翻滚 settle、日志打字机、相机自动巡航/扫描线周期扫、焦点呼吸。禁止纯装饰动画。
@@ -55,7 +55,7 @@ scramble 实现要点:glyphs 池 `"0123456789#%/<>"`,按进度比例逐字符 re
 
 ## 框架化适配更多主题的要点
 
-1. 主题 = 一个配置对象:`{ tokens: {accent,...}, brand, ticker 词表, kpi 定义, 日志模板, globe hub, 地形配色, seed }`;切换 = 换配置 + `body.dataset.theme` 驱动 CSS 变量。
+1. 两层正交配置:**主题(世界)** = `themes/*.js` `{ tokens: {accent,...}, brand, ticker 词表, kpi 定义, 日志模板, globe hub, 地形配色, seed }`;**风格(视觉)** = `styles/*.js` `{ accent?, accentUse, sparks, css, cssLight }`(灰阶、面板、氛围层变量)。切换 = setProperty 重设 CSS 变量 + `refreshPalette()` + 重建视图;CSS 里不写主题名选择器。
 2. 数据层用**种子化程序化生成**(fbm 噪声 + 最陡下降河流 + 航点轨迹)保证无烘焙资产也能演示完整管线;
 3. 引擎层(glkit/terrain/globe/panels/chrome)与主题、数据完全解耦,只允许通过数据模型通信。
 

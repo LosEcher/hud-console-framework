@@ -1,14 +1,15 @@
 {
   "$schema": "hud-design-tokens@1",
-  "comment": "HUD CONSOLE 设计令牌 —— 唯一事实来源。css/hud.css 的 :root 与 body[data-theme] 映射到 CSS 变量;主题 JS 配置通过 setProperty 覆盖。所有控件、页面、主题只允许引用令牌,禁止硬编码。",
+  "comment": "HUD CONSOLE 设计令牌 —— 唯一事实来源。css/hud.css 的 :root 映射到 CSS 变量;世界(themes/*.js)和风格(styles/*.js)通过 setProperty 覆盖,CSS 中不出现主题名。所有控件、页面、主题只允许引用令牌,禁止硬编码。",
 
   "color": {
     "bg":       { "value": "#030304",  "css": "--bg",       "role": "画布底色(近黑)" },
     "bg2":      { "value": "#0b0b0d",  "css": "--bg2",      "role": "径向渐变中场" },
     "fg":       { "value": "#e9e9e9",  "css": "--fg",       "role": "主文字/高亮线" },
-    "dim":      { "value": "color-mix(in srgb, var(--fg) 45%, transparent)", "css": "--dim",  "role": "次级文字" },
-    "faint":    { "value": "color-mix(in srgb, var(--fg) 22%, transparent)", "css": "--faint", "role": "弱提示/小注" },
-    "line":     { "value": "color-mix(in srgb, var(--fg) 13%, transparent)", "css": "--line",  "role": "面板边框/分隔线" },
+    "dim":      { "value": "color-mix(in srgb, var(--fg) 52%, transparent)", "css": "--dim",  "role": "次级文字(所有信息类小字的最低档,≥4.5:1;浅色 62%)" },
+    "faint":    { "value": "color-mix(in srgb, var(--fg) 22%, transparent)", "css": "--faint", "role": "仅限非文字:禁用态、装饰符号、弱刻度(禁止承载信息文字,contrast 脚本检查)" },
+    "line":     { "value": "color-mix(in srgb, var(--fg) 13%, transparent)", "css": "--line",  "role": "装饰分隔线/面板边框(不作为控件唯一边界)" },
+    "lineStrong": { "value": "color-mix(in srgb, var(--fg) 40%, transparent)", "css": "--line-strong", "role": "交互控件边界,≥3:1(WCAG 1.4.11);浅色 50%" },
     "accent":   { "value": "#ff9a3c",  "css": "--accent",   "role": "唯一强调色(状态/关键)" },
     "accentRgb":{ "value": "255,154,60", "css": "--accent-rgb", "role": "强调色 RGB 三元组,供 rgba() 使用" },
     "danger":   { "value": "#ff6056",  "css": "--danger",   "role": "语义危险色(仅次于 accent 的第二色,仅错误/删除)" },
@@ -55,7 +56,7 @@
     "wide":      { "value": "0.18em", "role": "面板标题字距" },
     "brand":     { "value": "0.32em", "role": "品牌字字距" },
     "scale": {
-      "micro":  "7.5px", "small": "8px", "body": "10px",
+      "micro":  "9px (--fs-xs,信息文字下限)", "small": "9.5px (--fs-sm)", "body": "10px",
       "panel": "9.5px",  "kpi":  "17px", "clock": "18px", "board": "26px"
     }
   },

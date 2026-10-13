@@ -10,6 +10,7 @@ import { groupDigits } from "../core/util.js";
 import { scramble, pick, startChrome } from "../core/chrome.js";
 import { startSparks } from "../core/sparks.js";
 import { refreshPalette, pal, acStr } from "../core/palette.js";
+import { STYLE_IDS } from "../core/prefs.js";
 
 const $ = (id) => document.getElementById(id);
 
@@ -18,7 +19,6 @@ const $ = (id) => document.getElementById(id);
 //   style = visual language (ladder, surfaces, atmosphere)             ?style=
 // plus user preferences ?scheme= ?accent= ?density= ?motion= ?fx=.
 const THEME_IDS = ["ember", "orbital", "cinder"];
-const STYLE_IDS = ["phosphor", "paperlab"];
 // backwards compatibility: paperlab used to be a theme (orbital world + paperlab look)
 const THEME_ALIASES = { paperlab: { theme: "orbital", style: "paperlab" } };
 // CSS vars set by the active style/preferences; cleared on every switch

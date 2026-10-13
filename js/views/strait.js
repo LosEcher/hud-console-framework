@@ -6,12 +6,14 @@
 // Bilingual like lab/components: ?lang=zh|en, localStorage, auto-detect.
 
 import { fitCanvas } from "../core/glkit.js";
+import { startPrefs } from "../core/prefs.js";
 import { rng, hash, makeNoise, fbmFactory, clamp, lerp, groupDigits } from "../core/util.js";
 import { refreshPalette, ink, acStr, bgStr } from "../core/palette.js";
 import { startChrome, scramble } from "../core/chrome.js";
 import { startSparks } from "../core/sparks.js";
 import { initLang, onLang, t as tt } from "../core/i18n.js";
 import { surface, dotBuckets, label, FONT } from "./panels2d.js";
+startPrefs();
 
 const $ = (id) => document.getElementById(id);
 const NM = 17;                      // strait length, nautical miles

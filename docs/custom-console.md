@@ -76,7 +76,9 @@ function setScheme(s) {
 - **循环里的时间变量不要叫 `t`**。i18n 的 `t(zh, en)` 一旦被 `const t = now / 1000` 遮罩，帧函数里所有 `t()` 调用全部变成 "t is not a function"，且报错指向的行号具有迷惑性。约定：帧时间用 `tm`/`sec`，或把 i18n 函数别名导入（`t as tt`）。
 - **`scramble` 对 CJK 不友好**。它的字符合成表只有 `0123456789#%/<>`，中文字符会被当作"未落盘"逐字替换成乱码符号。含汉字的值包一层 CJK 感知 helper（`/[㐀-鿿]/` 命中就直接 `textContent` 落盘），纯数字/英文才走 scramble。
 
-URL 契约与 index 保持一致：`?scheme=dark|light`、`?accent=rrggbb`（重染强调色），这个监控台默认 `light`（纸墨是它的原生场景）。
+URL 契约与 index 保持一致：`?scheme=dark|light`、`?accent=rrggbb`（重染强调色）、`?style=phosphor|paperlab`、`?motion=full|reduced`、`?fx=0|1`（后三项由 `js/core/prefs.js` 统一处理），这个监控台默认 `light`（纸墨是它的原生场景）。
+
+可访问性底线（`npm run contrast` 会检查）：信息文字 ≥4.5:1、最小 9px（`--fs-xs`）；`--faint` 只给禁用态和装饰；控件边界用 `--line-strong`（≥3:1），`--line` 只做分隔线。
 
 ---
 

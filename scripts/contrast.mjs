@@ -119,6 +119,19 @@ for (const f of ["css/hud.css", "css/hud-components.css", ...readdirSync(root).f
   });
 }
 
+// tokens/base.json §styles documents styles/*.js — keep the two in sync
+const baseJson = JSON.parse(readFileSync(join(root, "tokens/base.json"), "utf8"));
+const MAPKEY = { bg: "--bg", surface: "--surface", surface2: "--surface-2", line: "--line", faint: "--faint", dim: "--dim", fg: "--fg", danger: "--danger" };
+for (const style of styles) {
+  const doc = baseJson.styles?.[style.id];
+  if (!doc) { if (style.id !== "phosphor") fails.push({ key: `tokens/base.json styles.${style.id} missing`, r: 0, min: 0, known: false, color: "-", bg: "-" }); continue; }
+  for (const scheme of ["dark", "light"]) for (const [k, v] of Object.entries(doc[scheme] ?? {})) {
+    const actual = k === "accent" ? style.accent?.[scheme] : (scheme === "dark" ? style.css : style.cssLight)[MAPKEY[k]];
+    if (actual?.toLowerCase() !== String(v).toLowerCase())
+      fails.push({ key: `tokens/base.json styles.${style.id}.${scheme}.${k}`, r: 0, min: 0, known: false, color: String(v), bg: `styles/${style.id}.js=${actual}` });
+  }
+}
+
 console.table(rows);
 const hard = fails.filter((f) => !f.known);
 for (const f of fails) console.log(`${f.known ? "known" : "FAIL "}  ${f.key}  ${f.r.toFixed(2)} < ${f.min}  (${f.color} on ${f.bg})`);

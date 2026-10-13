@@ -34,13 +34,18 @@ npm run dev        # -> http://localhost:7100 (或 PORT 环境变量)
 
 | 入口 | 用途 |
 |---|---|
-| `index.html` | 主控台演示(3D 地形 + 2D 仪表,三主题可切) |
+| `index.html` | 主控台演示(3D 地形 + 2D 仪表,3 个世界 × 2 种风格) |
 | `strait.html` | 船只通行监控台演示(海峡 chokepoint 交通台 —— 核心层复用的「业务皮肤」案例,见 [custom-console.md](custom-console.md)) |
 | `components.html` | 控件库(01 基础 · 02 终端 · 03 表格 · 04 笔记 · 05 启动器 · 06 报表 · 07 扩展 24 项) |
 | `lab.html` | 令牌实验室(点缀色参数 / 线宽 / 场景切换,全部可 URL 复现) |
 
 URL 参数(任意页面):`?scheme=dark|light` `?linew=0.5..3` `?accent=rrggbb`(覆盖主色色相,不限主题)。
-主页额外支持两个独立层:`?theme=ember|orbital|cinder`(世界内容)和 `?style=phosphor|paperlab`(视觉风格),以及偏好参数 `?density=compact|cozy`、`?motion=full|reduced`(默认跟随 prefers-reduced-motion)、`?fx=0|1`(扫描线/颗粒/粒子)。旧的 `?theme=paperlab` 等同于 `?theme=orbital&style=paperlab`;lab 额外支持 `?density=&ratio=&opacity=&comet=`。
+所有页面还支持 `?style=phosphor|paperlab`(lab 除外,它的粒子预览依赖 phosphor 透明面板)、`?motion=full|reduced`(默认跟随 prefers-reduced-motion;reduced 关闭粒子/扫描线/颗粒/过渡)、`?fx=0|1`(扫描线、颗粒、粒子);主页和 components 支持 `?density=compact|cozy`。
+主页额外支持 `?theme=ember|orbital|cinder`;旧的 `?theme=paperlab` 等同于 `?theme=orbital&style=paperlab`。lab 的 `?density=&ratio=&opacity=&comet=` 是粒子参数。
+
+**主题与风格。** 主题(`themes/*.js`)是世界内容:文案、地形、赛事数据、默认强调色。风格(`styles/*.js`)是视觉语言:灰阶模型(phosphor 透明度派生 / paperlab 实色阶梯)、面板、氛围层。两者正交,任何世界都能套任何风格。解析顺序:风格默认 → 世界强调色(风格未指定时)→ 用户偏好 → URL。
+
+**对比度检查。** `npm run contrast` 按 主题 × 风格 × 深浅色 计算 WCAG 对比度(文字 4.5:1,控件强调色和 `--line-strong` 3:1);任何用 `--faint` 显示的文字都会失败(faint 只用于非文字);同时校验 `tokens/base.json §styles` 与 `styles/*.js` 一致。`npm run check` = 语法检查 + 对比度。
 lab 与 components 为中英双语(顶栏 ZH/EN 切换,自动检测浏览器语言;可用 `?lang=zh|en` 强制)。
 
 ## 目录结构
