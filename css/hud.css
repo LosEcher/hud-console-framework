@@ -57,7 +57,7 @@ body::after {
 .top {
   grid-column: 1 / -1;
   display: grid;
-  grid-template-columns: 320px 1fr 340px;
+  grid-template-columns: 320px minmax(0, 1fr) auto 340px;
   gap: var(--gap);
   align-items: center;
   border-bottom: var(--line-w) solid var(--line);
@@ -79,8 +79,11 @@ body::after {
 .legend i, .bottom i { display: inline-block; width: 6px; height: 6px; background: var(--fg); margin-right: 5px; vertical-align: 0; }
 .legend i.accent, .bottom i.accent { background: var(--accent); }
 
+/* nav clusters (site / theme / scheme) share one grid cell */
+.navs { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.navs .pages { margin-left: 0; }
 /* theme switcher */
-.pages { display: flex; gap: 4px; margin-left: 12px; }
+.pages { display: flex; gap: 4px; margin-left: 12px; flex: none; }
 .pages button {
   font: inherit; font-size: 8px; letter-spacing: 0.2em; color: var(--dim);
   background: transparent; border: var(--line-w) solid var(--line); padding: 3px 6px; cursor: pointer;
@@ -204,6 +207,8 @@ td.num, th.num { text-align: right; padding-left: 8px; font-variant-numeric: tab
   body { overflow: auto; }
   .frame { height: auto; grid-template-columns: minmax(0, 1fr); grid-template-rows: auto; padding: 12px 16px; }
   .top { grid-template-columns: 1fr auto; padding-bottom: 8px; }
+  .navs { grid-column: 1 / -1; grid-row: 2; flex-wrap: wrap; }
+  .frame > .top { height: auto; }
   .ticker, .legend { display: none; }
   .center { order: -1; grid-template-rows: 70vh 168px; }
   .col .panel { min-height: 200px; }
