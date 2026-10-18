@@ -71,7 +71,7 @@
     "build": "tsc -p tsconfig.types.json",
     "pack:check": "node scripts/check-pack.mjs",
     "prepack": "npm run build",
-    "prepublishOnly": "npm run check && npm run pack:check"
+    "prepublishOnly": "npm run check && npm run build && npm run pack:check"
   },
   "devDependencies": {
     "typescript": "^5.9.3"
