@@ -30,6 +30,34 @@ npm run dev        # -> http://localhost:7100 (或 PORT 环境变量)
 
 任何静态文件服务器都可以,没有构建步骤。
 
+## 安装
+
+通过 npm 安装：
+
+```bash
+npm install hud-console-framework
+```
+
+```js
+// 使用打包工具（Vite、webpack 等）时
+import "hud-console-framework/hud.css";             // 设计令牌和页面外框
+import "hud-console-framework/components.css";      // hud-* 控件
+import { refreshPalette, startSparks } from "hud-console-framework";
+```
+
+不用构建工具时，可以直接从 CDN 引用 CSS。正式环境请写死版本号：
+
+```html
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hud-console-framework@0.1.0/css/hud.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hud-console-framework@0.1.0/css/hud-components.css">
+<!-- 也可以用 unpkg：https://unpkg.com/hud-console-framework@0.1.0/css/hud.css -->
+<script type="module">
+  import { refreshPalette, startSparks } from "https://cdn.jsdelivr.net/npm/hud-console-framework@0.1.0/index.js";
+</script>
+```
+
+npm 包只包含可复用的部分：`css/`、字体、`js/core/`（不含演示数据生成器）、`styles/`、`tokens/base.json` 和 TypeScript 类型声明。演示页面、`js/views/`、`themes/` 和文档只在仓库里。接入方式见 [adoption.md](adoption.md)。
+
 ## 页面
 
 | 入口 | 用途 |
