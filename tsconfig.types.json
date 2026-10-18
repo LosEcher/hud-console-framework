@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "checkJs": false,
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "outDir": "types",
+    "target": "ES2022",
+    "module": "ES2022",
+    "moduleResolution": "bundler",
+    "lib": ["ES2022", "DOM"],
+    "skipLibCheck": true,
+    "strict": false
+  },
+  "files": [
+    "index.js",
+    "js/core/palette.js",
+    "js/core/sparks.js",
+    "js/core/chrome.js",
+    "js/core/prefs.js",
+    "js/core/i18n.js",
+    "js/core/glkit.js",
+    "js/core/util.js"
+  ]
+}

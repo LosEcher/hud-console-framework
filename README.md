@@ -30,6 +30,34 @@ npm run dev        # -> http://localhost:7100 (or set PORT)
 
 Any static file server works too — there is no build step.
 
+## Install
+
+From npm:
+
+```bash
+npm install hud-console-framework
+```
+
+```js
+// bundler (Vite, webpack, ...)
+import "hud-console-framework/hud.css";             // tokens + page chrome
+import "hud-console-framework/components.css";      // hud-* controls
+import { refreshPalette, startSparks } from "hud-console-framework";
+```
+
+Without a build step, load the CSS from a CDN. Pin a version in production:
+
+```html
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hud-console-framework@0.1.0/css/hud.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hud-console-framework@0.1.0/css/hud-components.css">
+<!-- or unpkg: https://unpkg.com/hud-console-framework@0.1.0/css/hud.css -->
+<script type="module">
+  import { refreshPalette, startSparks } from "https://cdn.jsdelivr.net/npm/hud-console-framework@0.1.0/index.js";
+</script>
+```
+
+The package ships only the reusable layer: `css/`, the font, `js/core/` (minus the demo data synthesizer), `styles/`, `tokens/base.json` and TypeScript declarations. Demo pages, `js/views/`, `themes/` and docs stay in the repository. See [docs/adoption.md](docs/adoption.md) for adoption levels.
+
 ## Pages
 
 | Entry | Purpose |

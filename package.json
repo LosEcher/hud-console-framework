@@ -1,17 +1,79 @@
 {
   "name": "hud-console-framework",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "Token-driven sci-fi HUD console framework · dark/light dual-scheme · zero-dependency",
+  "keywords": [
+    "hud",
+    "sci-fi",
+    "css-framework",
+    "design-tokens",
+    "dark-mode",
+    "light-mode",
+    "ui-components",
+    "webgl",
+    "zero-dependency"
+  ],
   "license": "MIT",
-  "private": false,
-  "type": "module",
+  "author": "LosEcher",
+  "homepage": "https://losecher.github.io/hud-console-framework/",
   "repository": {
     "type": "git",
-    "url": "https://github.com/LosEcher/hud-console-framework"
+    "url": "git+https://github.com/LosEcher/hud-console-framework.git"
   },
+  "bugs": {
+    "url": "https://github.com/LosEcher/hud-console-framework/issues"
+  },
+  "type": "module",
+  "main": "./index.js",
+  "module": "./index.js",
+  "types": "./types/index.d.ts",
+  "style": "./css/hud.css",
+  "exports": {
+    ".": {
+      "types": "./types/index.d.ts",
+      "default": "./index.js"
+    },
+    "./hud.css": "./css/hud.css",
+    "./components.css": "./css/hud-components.css",
+    "./css/*": "./css/*",
+    "./js/core/*.js": {
+      "types": "./types/js/core/*.d.ts",
+      "default": "./js/core/*.js"
+    },
+    "./styles/*.js": "./styles/*.js",
+    "./tokens/base.json": "./tokens/base.json",
+    "./assets/*": "./assets/*",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "index.js",
+    "types/",
+    "css/",
+    "assets/fonts/",
+    "js/core/palette.js",
+    "js/core/sparks.js",
+    "js/core/chrome.js",
+    "js/core/prefs.js",
+    "js/core/i18n.js",
+    "js/core/glkit.js",
+    "js/core/util.js",
+    "styles/",
+    "tokens/base.json",
+    "NOTICE.md"
+  ],
+  "sideEffects": [
+    "*.css"
+  ],
   "scripts": {
     "dev": "node server.mjs",
     "contrast": "node scripts/contrast.mjs",
-    "check": "node --check server.mjs && node scripts/contrast.mjs"
+    "check": "node --check server.mjs && node --check index.js && node scripts/contrast.mjs",
+    "build": "tsc -p tsconfig.types.json",
+    "pack:check": "node scripts/check-pack.mjs",
+    "prepack": "npm run build",
+    "prepublishOnly": "npm run check && npm run build && npm run pack:check"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3"
   }
 }
